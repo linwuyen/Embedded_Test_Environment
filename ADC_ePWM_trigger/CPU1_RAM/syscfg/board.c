@@ -52,6 +52,7 @@ void Board_init()
 	ASYSCTL_init();
 	ADC_init();
 	EPWM_init();
+	GPIO_init();
 	INTERRUPT_init();
 
 	EDIS;
@@ -79,6 +80,8 @@ void PinMux_init()
 	GPIO_setPadConfig(myEPWM0_EPWMB_GPIO, GPIO_PIN_TYPE_STD);
 	GPIO_setQualificationMode(myEPWM0_EPWMB_GPIO, GPIO_QUAL_SYNC);
 
+	// GPIO10 -> myGPIO0 Pinmux
+	GPIO_setPinConfig(GPIO_10_GPIO10);
 
 }
 
@@ -97,7 +100,7 @@ void myADC0_init(){
 	//
 	// Configures the ADC module's offset trim
 	//
-	ADC_setOffsetTrimAll(ADC_REFERENCE_EXTERNAL,ADC_REFERENCE_2_5V);
+	ADC_setOffsetTrimAll(ADC_REFERENCE_INTERNAL,ADC_REFERENCE_3_3V);
 	//
 	// Configures the analog-to-digital converter module prescaler.
 	//
@@ -113,7 +116,7 @@ void myADC0_init(){
 	//
 	// Delay for 1ms to allow ADC time to power up
 	//
-	DEVICE_DELAY_US(500);
+	DEVICE_DELAY_US(5000);
 	//
 	// SOC Configuration: Setup ADC EPWM channel and trigger settings
 	//
@@ -132,10 +135,10 @@ void myADC0_init(){
 	// 	  	SOC number		: 0
 	//	  	Trigger			: ADC_TRIGGER_EPWM1_SOCA
 	//	  	Channel			: ADC_CH_ADCIN0
-	//	 	Sample Window	: 200 SYSCLK cycles
+	//	 	Sample Window	: 8 SYSCLK cycles
 	//		Interrupt Trigger: ADC_INT_SOC_TRIGGER_NONE
 	//
-	ADC_setupSOC(myADC0_BASE, ADC_SOC_NUMBER0, ADC_TRIGGER_EPWM1_SOCA, ADC_CH_ADCIN0, 200U);
+	ADC_setupSOC(myADC0_BASE, ADC_SOC_NUMBER0, ADC_TRIGGER_EPWM1_SOCA, ADC_CH_ADCIN0, 8U);
 	ADC_setInterruptSOCTrigger(myADC0_BASE, ADC_SOC_NUMBER0, ADC_INT_SOC_TRIGGER_NONE);
 	//
 	// ADC Interrupt 1 Configuration
@@ -163,9 +166,13 @@ void ASYSCTL_init(){
 	//
 	ASysCtl_disableTemperatureSensor();
 	//
-	// Set the analog voltage reference selection to external.
+	// Set the analog voltage reference selection to internal.
 	//
-	ASysCtl_setAnalogReferenceExternal( ASYSCTL_VREFHIA | ASYSCTL_VREFHIB | ASYSCTL_VREFHIC );
+	ASysCtl_setAnalogReferenceInternal( ASYSCTL_VREFHIA | ASYSCTL_VREFHIB | ASYSCTL_VREFHIC );
+	//
+	// Set the internal analog voltage reference selection to 1.65V.
+	//
+	ASysCtl_setAnalogReference1P65( ASYSCTL_VREFHIA | ASYSCTL_VREFHIB | ASYSCTL_VREFHIC );
 }
 
 //*****************************************************************************
@@ -175,20 +182,21 @@ void ASYSCTL_init(){
 //*****************************************************************************
 void EPWM_init(){
     EPWM_setClockPrescaler(myEPWM0_BASE, EPWM_CLOCK_DIVIDER_1, EPWM_HSCLOCK_DIVIDER_1);	
-    EPWM_setTimeBasePeriod(myEPWM0_BASE, 500);	
+    EPWM_setTimeBasePeriod(myEPWM0_BASE, 250);	
     EPWM_setTimeBaseCounter(myEPWM0_BASE, 0);	
-    EPWM_setTimeBaseCounterMode(myEPWM0_BASE, EPWM_COUNTER_MODE_DOWN);	
+    EPWM_setTimeBaseCounterMode(myEPWM0_BASE, EPWM_COUNTER_MODE_UP_DOWN);	
     EPWM_disablePhaseShiftLoad(myEPWM0_BASE);	
     EPWM_setPhaseShift(myEPWM0_BASE, 0);	
-    EPWM_setCounterCompareValue(myEPWM0_BASE, EPWM_COUNTER_COMPARE_A, 0);	
+    EPWM_setCounterCompareValue(myEPWM0_BASE, EPWM_COUNTER_COMPARE_A, 125);	
+    EPWM_disableCounterCompareShadowLoadMode(myEPWM0_BASE, EPWM_COUNTER_COMPARE_A);	
     EPWM_setCounterCompareShadowLoadMode(myEPWM0_BASE, EPWM_COUNTER_COMPARE_A, EPWM_COMP_LOAD_ON_CNTR_ZERO);	
-    EPWM_setCounterCompareValue(myEPWM0_BASE, EPWM_COUNTER_COMPARE_B, 0);	
+    EPWM_setCounterCompareValue(myEPWM0_BASE, EPWM_COUNTER_COMPARE_B, 10);	
     EPWM_setCounterCompareShadowLoadMode(myEPWM0_BASE, EPWM_COUNTER_COMPARE_B, EPWM_COMP_LOAD_ON_CNTR_ZERO);	
-    EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO);	
+    EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_HIGH, EPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO);	
     EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_PERIOD);	
     EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPA);	
     EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPA);	
-    EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPB);	
+    EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_LOW, EPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPB);	
     EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_A, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_DOWN_CMPB);	
     EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_B, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO);	
     EPWM_setActionQualifierAction(myEPWM0_BASE, EPWM_AQ_OUTPUT_B, EPWM_AQ_OUTPUT_NO_CHANGE, EPWM_AQ_OUTPUT_ON_TIMEBASE_PERIOD);	
@@ -203,6 +211,22 @@ void EPWM_init(){
     EPWM_enableADCTrigger(myEPWM0_BASE, EPWM_SOC_A);	
     EPWM_setADCTriggerSource(myEPWM0_BASE, EPWM_SOC_A, EPWM_SOC_TBCTR_ZERO);	
     EPWM_setADCTriggerEventPrescale(myEPWM0_BASE, EPWM_SOC_A, 1);	
+}
+
+//*****************************************************************************
+//
+// GPIO Configurations
+//
+//*****************************************************************************
+void GPIO_init(){
+	myGPIO0_init();
+}
+
+void myGPIO0_init(){
+	GPIO_setPadConfig(myGPIO0, GPIO_PIN_TYPE_STD);
+	GPIO_setQualificationMode(myGPIO0, GPIO_QUAL_SYNC);
+	GPIO_setDirectionMode(myGPIO0, GPIO_DIR_MODE_OUT);
+	GPIO_setControllerCore(myGPIO0, GPIO_CORE_CPU1);
 }
 
 //*****************************************************************************

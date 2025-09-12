@@ -73,17 +73,21 @@ extern "C"
 #define GPIO_PIN_EPWM1_B 1
 #define myEPWM0_EPWMB_GPIO 1
 #define myEPWM0_EPWMB_PIN_CONFIG GPIO_1_EPWM1_B
+//
+// GPIO10 - GPIO Settings
+//
+#define myGPIO0_GPIO_PIN_CONFIG GPIO_10_GPIO10
 
 //*****************************************************************************
 //
 // ADC Configurations
 //
 //*****************************************************************************
-#define myADC0_BASE ADCA_BASE
-#define myADC0_RESULT_BASE ADCARESULT_BASE
+#define myADC0_BASE ADCB_BASE
+#define myADC0_RESULT_BASE ADCBRESULT_BASE
 #define myADC0_SOC0 ADC_SOC_NUMBER0
 #define myADC0_FORCE_SOC0 ADC_FORCE_SOC0
-#define myADC0_SAMPLE_WINDOW_SOC0 2000
+#define myADC0_SAMPLE_WINDOW_SOC0 80
 #define myADC0_TRIGGER_SOURCE_SOC0 ADC_TRIGGER_EPWM1_SOCA
 #define myADC0_CHANNEL_SOC0 ADC_CH_ADCIN0
 void myADC0_init();
@@ -101,11 +105,11 @@ void myADC0_init();
 //
 //*****************************************************************************
 #define myEPWM0_BASE EPWM1_BASE
-#define myEPWM0_TBPRD 500
-#define myEPWM0_COUNTER_MODE EPWM_COUNTER_MODE_DOWN
+#define myEPWM0_TBPRD 250
+#define myEPWM0_COUNTER_MODE EPWM_COUNTER_MODE_UP_DOWN
 #define myEPWM0_TBPHS 0
-#define myEPWM0_CMPA 0
-#define myEPWM0_CMPB 0
+#define myEPWM0_CMPA 125
+#define myEPWM0_CMPB 10
 #define myEPWM0_CMPC 0
 #define myEPWM0_CMPD 0
 #define myEPWM0_DBRED 0
@@ -116,12 +120,20 @@ void myADC0_init();
 
 //*****************************************************************************
 //
+// GPIO Configurations
+//
+//*****************************************************************************
+#define myGPIO0 10
+void myGPIO0_init();
+
+//*****************************************************************************
+//
 // INTERRUPT Configurations
 //
 //*****************************************************************************
 
 // Interrupt Settings for INT_myADC0_1
-#define INT_myADC0_1 INT_ADCA1
+#define INT_myADC0_1 INT_ADCB1
 #define INT_myADC0_1_INTERRUPT_ACK_GROUP INTERRUPT_ACK_GROUP1
 extern __interrupt void INT_myADC0_1_ISR(void);
 
@@ -140,6 +152,7 @@ void	Board_init();
 void	ADC_init();
 void	ASYSCTL_init();
 void	EPWM_init();
+void	GPIO_init();
 void	INTERRUPT_init();
 void	SYNC_init();
 void	PinMux_init();

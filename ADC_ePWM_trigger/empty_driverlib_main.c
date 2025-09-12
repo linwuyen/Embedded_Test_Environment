@@ -59,30 +59,30 @@ void main(void)
 
     while(1)
     {
-
+//SW
 //        ADC_forceSOC(myADC0_BASE,ADC_SOC_NUMBER0);
 //        ADC_soft = ADC_readResult(myADC0_RESULT_BASE,ADC_SOC_NUMBER0);
         PWMCNT = EPWM_getTimeBaseCounterValue(myEPWM0_BASE);
-    }
-}
 
+    }
+
+}
+//
+volatile uint32_t *gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +((18 / 32U) * GPIO_DATA_REGS_STEP);
+//volatile uint32_t *gpioDataReg2 = (uint32_t *)((uintptr_t)GPIODATA_BASE) +((31 / 32U) * GPIO_DATA_REGS_STEP);
 
 __interrupt void INT_myADC0_1_ISR (void){
+
+//    gpioDataReg[GPIO_GPxSET_INDEX]   = 0x70000U;
+
+
     ADC_soft = ADC_readResult(myADC0_RESULT_BASE,ADC_SOC_NUMBER0);
+    GPIO_writePin(myGPIO0,1);
+
+    GPIO_writePin(myGPIO0,0);
+//    gpioDataReg[GPIO_GPxSET_INDEX]   = 0x70000U;
+
     ADC_clearInterruptStatus(myADC0_BASE, ADC_INT_NUMBER1);
-
-    //
-    // Check if overflow has occurred
-    //
-    if(true == ADC_getInterruptOverflowStatus(myADC0_BASE, ADC_INT_NUMBER1))
-    {
-        ADC_clearInterruptOverflowStatus(myADC0_BASE, ADC_INT_NUMBER1);
-        ADC_clearInterruptStatus(myADC0_BASE, ADC_INT_NUMBER1);
-    }
-
-    //
-    // Acknowledge the interrupt
-    //
     Interrupt_clearACKGroup(INT_myADC0_1_INTERRUPT_ACK_GROUP);
 }
 

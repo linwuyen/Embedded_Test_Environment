@@ -3,7 +3,7 @@
 syscfg/c2000ware_libraries.obj: syscfg/c2000ware_libraries.c
 syscfg/c2000ware_libraries.obj: syscfg/c2000ware_libraries.h
 syscfg/c2000ware_libraries.obj: syscfg/board.h
-syscfg/c2000ware_libraries.obj: C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/driverlib.h
+syscfg/c2000ware_libraries.obj: C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/driverlib.h
 syscfg/c2000ware_libraries.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h
 syscfg/c2000ware_libraries.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/adc.h
 syscfg/c2000ware_libraries.obj: C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdbool.h
@@ -97,7 +97,7 @@ syscfg/c2000ware_libraries.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f2800
 syscfg/c2000ware_libraries.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/inc/hw_spi.h
 syscfg/c2000ware_libraries.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/version.h
 syscfg/c2000ware_libraries.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/driver_inclusive_terminology_mapping.h
-syscfg/c2000ware_libraries.obj: C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/device.h
+syscfg/c2000ware_libraries.obj: C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/device.h
 
 syscfg/c2000ware_libraries.c:
 
@@ -105,7 +105,7 @@ syscfg/c2000ware_libraries.h:
 
 syscfg/board.h:
 
-C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/driverlib.h:
+C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/driverlib.h:
 
 C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h:
 
@@ -293,5 +293,5 @@ C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/version.h:
 
 C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/driver_inclusive_terminology_mapping.h:
 
-C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/device.h:
+C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/device.h:
 

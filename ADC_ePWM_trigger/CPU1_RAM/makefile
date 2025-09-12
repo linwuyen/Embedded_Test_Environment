@@ -142,7 +142,7 @@ all: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 ADC_ePWM_trigger.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla2 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -Ooff --define=DEBUG --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"ADC_ePWM_trigger.map" --heap_size=0x200 --stack_size=0x3F8 --warn_sections -i"C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/lib" -i"C:/ti/c2000/C2000Ware_5_01_00_00" -i"C:/Users/roger_lin/Desktop/test environment/ADC_ePWM_trigger/CPU1_RAM/syscfg" -i"C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="ADC_ePWM_trigger_linkInfo.xml" --entry_point=code_start --rom_model -o "ADC_ePWM_trigger.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla2 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -Ooff --define=DEBUG --diag_suppress=10063 --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"ADC_ePWM_trigger.map" --heap_size=0x200 --stack_size=0x3F8 --warn_sections -i"C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/lib" -i"C:/ti/c2000/C2000Ware_5_01_00_00" -i"C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/CPU1_RAM/syscfg" -i"C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="ADC_ePWM_trigger_linkInfo.xml" --entry_point=code_start --rom_model -o "ADC_ePWM_trigger.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -159,9 +159,9 @@ clean:
 
 post-build:
 	-echo "========= Build of the CLB simulation has moved to the CLB Tool. Click the '?' icon by the _Generate CLB Simulation File_ enable for more details (located in the Global Parameters of the Tile Design SysConfig module) ============="
-	-if 0 == 1  C:/ti/ccs1280/ccs/tools/node/node.exe "C:/ti/c2000/C2000Ware_5_01_00_00/utilities/clb_tool/clb_syscfg/dot_file_libraries/clbDotUtility.js"  "C:/ti/c2000/C2000Ware_5_01_00_00/utilities/clb_tool/clb_syscfg/" "C:/Users/roger_lin/Desktop/test environment/ADC_ePWM_trigger/CPU1_RAM/syscfg" "C:/Users/roger_lin/Desktop/test environment/ADC_ePWM_trigger/CPU1_RAM/syscfg/clb.dot"
-	-if 0 == 1  mkdir "C:/Users/roger_lin/Desktop/test environment/ADC_ePWM_trigger/CPU1_RAM/diagrams"
-	-if 0 == 1  C:/ti/ccs1280/ccs/tools/node/node.exe "C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/.meta/generate_diagrams.js" "C:/ti/c2000/C2000Ware_5_01_00_00" "C:/Users/roger_lin/Desktop/test environment/ADC_ePWM_trigger/CPU1_RAM/diagrams" "C:/Users/roger_lin/Desktop/test environment/ADC_ePWM_trigger/CPU1_RAM/syscfg"
+	-if 0 == 1  C:/ti/ccs1280/ccs/tools/node/node.exe "C:/ti/c2000/C2000Ware_5_01_00_00/utilities/clb_tool/clb_syscfg/dot_file_libraries/clbDotUtility.js"  "C:/ti/c2000/C2000Ware_5_01_00_00/utilities/clb_tool/clb_syscfg/" "C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/CPU1_RAM/syscfg" "C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/CPU1_RAM/syscfg/clb.dot"
+	-if 0 == 1  mkdir "C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/CPU1_RAM/diagrams"
+	-if 0 == 1  C:/ti/ccs1280/ccs/tools/node/node.exe "C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/.meta/generate_diagrams.js" "C:/ti/c2000/C2000Ware_5_01_00_00" "C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/CPU1_RAM/diagrams" "C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/CPU1_RAM/syscfg"
 	-@echo ' '
 
 .PHONY: all clean dependents

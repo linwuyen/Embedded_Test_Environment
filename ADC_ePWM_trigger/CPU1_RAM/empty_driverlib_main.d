@@ -1,7 +1,7 @@
 # FIXED
 
 empty_driverlib_main.obj: ../empty_driverlib_main.c
-empty_driverlib_main.obj: C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/driverlib.h
+empty_driverlib_main.obj: C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/driverlib.h
 empty_driverlib_main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h
 empty_driverlib_main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/adc.h
 empty_driverlib_main.obj: C:/ti/ccs1280/ccs/tools/compiler/ti-cgt-c2000_22.6.1.LTS/include/stdbool.h
@@ -95,13 +95,13 @@ empty_driverlib_main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/dri
 empty_driverlib_main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/inc/hw_spi.h
 empty_driverlib_main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/version.h
 empty_driverlib_main.obj: C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/driver_inclusive_terminology_mapping.h
-empty_driverlib_main.obj: C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/device.h
+empty_driverlib_main.obj: C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/device.h
 empty_driverlib_main.obj: syscfg/board.h
 empty_driverlib_main.obj: syscfg/c2000ware_libraries.h
 
 ../empty_driverlib_main.c:
 
-C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/driverlib.h:
+C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/driverlib.h:
 
 C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h:
 
@@ -289,7 +289,7 @@ C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/version.h:
 
 C:/ti/c2000/C2000Ware_5_01_00_00/driverlib/f28004x/driverlib/driver_inclusive_terminology_mapping.h:
 
-C:/Users/roger_lin/Desktop/test\ environment/ADC_ePWM_trigger/device/device.h:
+C:/Users/roger_lin/Documents/GitHub/test-environment/ADC_ePWM_trigger/device/device.h:
 
 syscfg/board.h:
 
