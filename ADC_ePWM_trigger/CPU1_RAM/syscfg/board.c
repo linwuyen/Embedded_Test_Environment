@@ -51,6 +51,7 @@ void Board_init()
 	SYNC_init();
 	ASYSCTL_init();
 	ADC_init();
+	AIO_init();
 	EPWM_init();
 	GPIO_init();
 	INTERRUPT_init();
@@ -69,6 +70,9 @@ void PinMux_init()
 	// PinMux for modules assigned to CPU1
 	//
 	
+	// AIO226 -> myAIO0 Pinmux
+	GPIO_setPinConfig(GPIO_226_GPIO226);
+	GPIO_setAnalogMode(226, GPIO_ANALOG_DISABLED);
 	//
 	// EPWM1 -> myEPWM0 Pinmux
 	//
@@ -151,6 +155,23 @@ void myADC0_init(){
 	ADC_clearInterruptStatus(myADC0_BASE, ADC_INT_NUMBER1);
 	ADC_disableContinuousMode(myADC0_BASE, ADC_INT_NUMBER1);
 	ADC_enableInterrupt(myADC0_BASE, ADC_INT_NUMBER1);
+}
+
+//*****************************************************************************
+//
+// AIO Configurations
+//
+//*****************************************************************************
+void AIO_init(){
+	myAIO0_init();
+}
+
+void myAIO0_init(){
+	GPIO_setAnalogMode(myAIO0, GPIO_ANALOG_DISABLED);
+	GPIO_setDirectionMode(myAIO0, GPIO_DIR_MODE_IN);
+	GPIO_setPadConfig(myAIO0, GPIO_PIN_TYPE_STD);
+	GPIO_setControllerCore(myAIO0, GPIO_CORE_CPU1);
+	GPIO_setQualificationMode(myAIO0, GPIO_QUAL_SYNC);
 }
 
 //*****************************************************************************

@@ -57,6 +57,11 @@ extern "C"
 // PinMux Configurations
 //
 //*****************************************************************************
+//
+// AIO226 - GPIO Settings
+//
+#define GPIO_PIN_AIO226 226
+#define myAIO0_AIO_PIN_CONFIG GPIO_226_GPIO226
 
 //
 // EPWM1 -> myEPWM0 Pinmux
@@ -92,6 +97,14 @@ extern "C"
 #define myADC0_CHANNEL_SOC0 ADC_CH_ADCIN0
 void myADC0_init();
 
+
+//*****************************************************************************
+//
+// AIO Configurations
+//
+//*****************************************************************************
+#define myAIO0 226
+void myAIO0_init();
 
 //*****************************************************************************
 //
@@ -150,6 +163,7 @@ extern __interrupt void INT_myADC0_1_ISR(void);
 //*****************************************************************************
 void	Board_init();
 void	ADC_init();
+void	AIO_init();
 void	ASYSCTL_init();
 void	EPWM_init();
 void	GPIO_init();

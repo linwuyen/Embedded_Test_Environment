@@ -11,6 +11,8 @@
  */
 const adc     = scripting.addModule("/driverlib/adc.js", {}, false);
 const adc1    = adc.addInstance();
+const aio     = scripting.addModule("/driverlib/aio.js", {}, false);
+const aio1    = aio.addInstance();
 const asysctl = scripting.addModule("/driverlib/asysctl.js");
 const epwm    = scripting.addModule("/driverlib/epwm.js", {}, false);
 const epwm1   = epwm.addInstance();
@@ -32,6 +34,8 @@ adc1.soc0SampleWindow            = 8;
 adc1.soc0UseSampleTimeCalculator = true;
 adc1.adcClockPrescaler           = "ADC_CLK_DIV_2_0";
 adc1.adcInt1.enableInterrupt     = true;
+
+aio1.$name = "myAIO0";
 
 asysctl.analogReferenceVoltage = "1P65";
 asysctl.analogReference        = "INTERNAL";
@@ -59,5 +63,7 @@ gpio1.gpioPin.$assign = "GPIO10";
  * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
  * re-solve from scratch.
  */
+aio1.aioPin.$suggestSolution          = "AIO228";
+aio1.aioPin["AIO#"].$suggestSolution  = "A6/PGA5_OF";
 epwm1.epwm.epwm_aPin.$suggestSolution = "GPIO0";
 epwm1.epwm.epwm_bPin.$suggestSolution = "GPIO1";
