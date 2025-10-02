@@ -9,7 +9,7 @@
 #define MODBUSSCI_H_
 
 
-#include "DSP2803x_Sci.h"                // SCI Registers
+//#include "DSP2803x_Sci.h"                // SCI Registers
 
 #define LOW_SPEED_CLOCK 	15000000
 

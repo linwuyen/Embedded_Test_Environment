@@ -8,17 +8,11 @@
 #ifndef MODBUS_MODBUSCOMMONM_H_
 #define MODBUS_MODBUSCOMMONM_H_
 
-typedef short           int16;
-typedef long            int32;
-typedef unsigned char   Uint8;
-typedef unsigned short  Uint16;
-typedef unsigned long   Uint32;
-typedef float           float32;
-typedef long double     float64;
-
 
 #include "board.h"
 #include "CRC16m.h"
+
+
 
 
 // Error codes
