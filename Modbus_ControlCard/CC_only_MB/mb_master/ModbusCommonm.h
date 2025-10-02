@@ -1,0 +1,73 @@
+/*
+ * ModbusCommon.h
+ *
+ *  Created on: 2018¦~7¤ë9¤é
+ *      Author: user
+ */
+
+#ifndef MODBUS_MODBUSCOMMONM_H_
+#define MODBUS_MODBUSCOMMONM_H_
+
+typedef short           int16;
+typedef long            int32;
+typedef unsigned char   Uint8;
+typedef unsigned short  Uint16;
+typedef unsigned long   Uint32;
+typedef float           float32;
+typedef long double     float64;
+
+
+#include "board.h"
+#include "CRC16m.h"
+
+
+// Error codes
+typedef enum {
+	MB_NO_ERRORm = 0,
+	MB_ERROR_ILLEGALFUNCm = 1,
+	MB_ERROR_ILLEGALADDRm,
+	MB_ERROR_ILLEGALDATAm,
+	MB_ERROR_SLVFAILUREm,
+	MB_ERROR_ACKNOWLEDGEm,
+	MB_ERROR_SLVBUSYm,
+	MB_ERROR_NEGACKNOWLEDGEm,
+	MB_ERROR_MEMPARITYm,
+	MB_ERROR_GATEWAYPATHUNm,
+	MSG_ERROR_TIMEOUTm = 9000
+} MSG_ERROR_IDm;
+
+typedef enum {
+	MB_READ_COIL_STATUSm = 0x01,
+	MB_READ_INPUT_STATUSm = 0x02,
+	MB_READ_HOLDING_REGISTERSm = 0x03,
+	MB_READ_INTPUT_REGISTERSm = 0x04,
+	MB_FORCE_SINGLE_COILm = 0x05,
+	MB_PRESET_SINGLE_REGISTERm = 0x06,
+	MB_READ_EXCEPTION_STATUSm = 0x07,
+	MB_DIAGNOSTICSm = 0x08,
+	MB_PROGRAM_484m = 0x09,
+	MB_POLL_484m = 0x0A,
+	MB_FETCH_COMM_EVENT_CTRm = 0x0B,
+	MB_FETCH_COMM_EVENT_LOGm = 0x0C,
+	MB_PROGRAM_CONTROLLERm = 0x0D,
+	MB_POLL_CONTROLLERm = 0x0E,
+	MB_FORCE_MULTIPLE_COILSm = 0x0F,
+	MB_PRESET_MULTIPLE_REGISTERSm = 0x10,
+	MB_REPORT_SLAVE_IDm = 0x11,
+	MB_PROGRAM_884_M84m = 0x12,
+	MB_RESET_COMM_LINKm = 0x13,
+	MB_READ_GENERAL_REFERENCEm = 0x14,
+	MB_WRITE_GENERAL_REFERENCEm = 0x15,
+	MB_MASK_WRITE_4X_REGISTERm = 0x16,
+	MB_READ_WRITE_4X_REGISTERSm = 0x17,
+	MB_READ_FIFO_QUEUEm = 0x18,
+	MB_END_OF_FUNCIDm,
+	MB_ERROR_MASKm = 0X80
+} MB_FUNC_IDm;
+
+#define END_OF_FUNCTIONm			(MB_END_OF_FUNCIDm-1)
+
+#define mbT35m (unsigned long) 5000  //1750
+#define mbT15m (unsigned long) 750
+
+#endif /* MODBUS_MODBUSCOMMON_H_ */
