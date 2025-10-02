@@ -104,7 +104,7 @@ typedef union {
 		uint16_t u16USERPARameterOFFSet;
 		uint16_t u16ADVAncePARameterOFFSet;
 		uint16_t u16COMmonCHEcksum;
-	    uint16_t u16CLAERROrSTAtus;
+		uint16_t \		uint16_t u16CLAERROrSTAtus;
 		uint16_t u16ENABlePWM;
 		uint16_t u16CONtrolMODe;
 		int16_t s16VOLtageREFerence;
