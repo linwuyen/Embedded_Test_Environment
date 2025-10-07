@@ -4,21 +4,22 @@
  *  Created on: May 17, 2024
  *      Author: User
  */
-#include "driverlib.h"
-#include "device.h"
-#include "board.h"
-#include "timetask.h"
+#include "common.h"
 
-
+ST_TIMER_MEAS t1 ={0};
+ST_TIMER_MEAS t2 ={0};
 
 void task500msec(void * s)
 {
-
+    measTimerLength(&t1);
+    GPIO_togglePin(myBoardLED0_GPIO);
 }
 
 
-void task10msec(void * s)
+void task200msec(void * s)
 {
+    measTimerLength(&t2);
+    GPIO_togglePin(myBoardLED0_GPIO);
 //    if(0 == u16Action){
 //        u16Action = u16Command;
 //        u16Command++;
@@ -31,29 +32,20 @@ void task10msec(void * s)
 //    }
 }
 
-
-void isThereNewDataInRAM(void)
-{
-
-}
-
-
 void task1msec(void * s)
 {
-
 //    GPIO_togglePin(PAR);
-
 }
 
 
 void asapTask(void * s)
 {
-
+    Modbus_FSM();
 }
 
 ST_TIMETASK time_task[] = {
         {task1msec,           0,   T_1MS},
-        {task10msec,          0,   T_10MS},
+        {task200msec,          0,   T_200MS},
         {task500msec,          0,   T_500MS},
         {asapTask,            0,   0},
         END_OF_TASK

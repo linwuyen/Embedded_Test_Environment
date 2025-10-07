@@ -12,7 +12,6 @@
 
 
 
-
 #ifdef DEBUG_ON
 #define C28_SCI_TX() scia_TXwrite_char(SCI_Module_Variables.Debug_Msg , strlen(SCI_Module_Variables.Debug_Msg)); //4,575,499 cycles
 #define C28_PRINTF(format, data) sprintf(SCI_Module_Variables.Debug_Msg, format, data), C28_SCI_TX();
@@ -477,13 +476,13 @@
 #define WAIT_Slave_Wait_OFF_Sync_OVERTIME       56
 
 
-typedef short           int16;
-typedef long            int32;
-typedef unsigned char   Uint8;
-typedef unsigned short  Uint16;
-typedef unsigned long   Uint32;
-typedef float           float32;
-typedef long double     float64;
+//typedef short           int16;
+//typedef long            int32;
+//typedef unsigned char   Uint8;
+//typedef unsigned short  Uint16;
+//typedef unsigned long   Uint32;
+//typedef float           float32;
+//typedef long double     float64;
 
 
 
@@ -1719,7 +1718,6 @@ void Init_Global_Variables(void);
 
 extern Uint16 isEepromFree(void);
 extern Uint16 callEepromData(void);
-
 
 
 //

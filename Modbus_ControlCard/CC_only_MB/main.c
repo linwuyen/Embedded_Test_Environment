@@ -1,9 +1,9 @@
-
 //
 // Included Files
 //
 
-#include "Modbus_Ctrl.h"
+#include "common.h"
+
 
 //
 // Main
@@ -14,7 +14,6 @@ void main(void)
     //
     // Initialize device clock and peripherals
     //
-
     Device_init();
 
     //
@@ -39,11 +38,6 @@ void main(void)
     Board_init();
 
     //
-    // C2000Ware Library initialization
-    //
-//    C2000Ware_libraries_init();
-
-    //
     // Enable Global Interrupt (INTM) and real time interrupt (DBGM)
     //
     EINT;
@@ -51,7 +45,8 @@ void main(void)
 
     while(1)
     {
-        Run_Modbus_FSM();
+        pollTimeTask();
+
     }
 }
 
