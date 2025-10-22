@@ -321,6 +321,7 @@ void EPWM_TRIGER_ADC(HAL_sPWM p)
 
 }
 
+
 //  GPIO_togglePin(PIN74_GPIO31_GPIO);
 //  GPIO_writePin(PIN74_GPIO31_GPIO,1);
 //  GPIO_writePin(PIN74_GPIO31_GPIO,0);
@@ -413,13 +414,13 @@ uint16_t ERROR;
 // Slave
 __interrupt void INT_mySPI0_RX_ISR(void){
     measTimerLength(&TimerRX);
-
+    GPIO_togglePin(myGPIO0);
     sSPIA.REGFIFO[sSPIA.u16pop].u16AllData = HWREGH(mySPI0_BASE + SPI_O_RXBUF);
-
+//
     uint16_t received_data = sSPIA.REGFIFO[sSPIA.u16pop].Package.u16CV_AD;
     uint16_t received_checksum = sSPIA.REGFIFO[sSPIA.u16pop].Package.u16check;
     uint16_t local_checksum = (received_data + 0x1234) & 0xF;
-
+//
     if (local_checksum == received_checksum){
          DAC_setShadowValue(CC_DA_BASE, received_data);
      }
@@ -427,6 +428,7 @@ __interrupt void INT_mySPI0_RX_ISR(void){
          ERROR++;
      }
 
+    GPIO_togglePin(myGPIO0);
      SPI_clearInterruptStatus(mySPI0_BASE, SPI_INT_RX_DATA_TX_EMPTY);
      Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP6);
 
@@ -446,18 +448,15 @@ __interrupt void INT_CV_AD_1_ISR(void){
 //
 //    sSPIA.REGFIFO[sSPIA.u16push].Package.u16check = (sSPIA.REGFIFO[sSPIA.u16push].Package.u16CV_AD + 0x1234) &0xF;
 //    SPI_writeDataNonBlocking(mySPI0_BASE, sSPIA.REGFIFO[sSPIA.u16push].u16AllData);
-
 //-----------------------
         //Current
         sSPIA.REGFIFO[sSPIA.u16push].Package.u16CV_AD = ADC_readResult(CV_AD_RESULT_BASE, ADC_SOC_NUMBER0);
-
 
         //Next
         sSPIA.u16pull_dac = (sSPIA.u16push + 1) % FIFO_SIZE;
 
         //Previous
         sSPIA.u16pull_slave = (sSPIA.u16push + FIFO_SIZE - 1) % FIFO_SIZE;
-
 
         sSPIA.REGFIFO[sSPIA.u16pull_slave].Package.u16check = (sSPIA.REGFIFO[sSPIA.u16pull_slave].Package.u16CV_AD + 0x1234) & 0xF;
 
