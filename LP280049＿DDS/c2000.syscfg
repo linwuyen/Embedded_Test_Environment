@@ -1,0 +1,50 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --device "F28004x" --part "F28004x_100PZ" --package "F28004x_100PZ" --context "system" --product "C2000WARE@5.03.00.00"
+ * @v2CliArgs --device "TMS320F280049C" --package "100PZ" --context "system" --product "C2000WARE@5.03.00.00"
+ * @versions {"tool":"1.21.0+3721"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const dac   = scripting.addModule("/driverlib/dac.js", {}, false);
+const dac1  = dac.addInstance();
+const epwm  = scripting.addModule("/driverlib/epwm.js", {}, false);
+const epwm1 = epwm.addInstance();
+const gpio  = scripting.addModule("/driverlib/gpio.js", {}, false);
+const gpio1 = gpio.addInstance();
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+const multiplier2         = system.clockTree["PLL_IMULT"];
+multiplier2.multiplyValue = 10;
+
+const mux2       = system.clockTree["OSCCLKSRCSEL"];
+mux2.inputSelect = "X1_XTAL";
+
+dac1.$name        = "myDAC0";
+dac1.enableOutput = true;
+
+epwm1.$name                                = "myEPWM0";
+epwm1.useCase                              = "CUSTOM";
+epwm1.epwmTimebase_period                  = 208;
+epwm1.epwmEventTrigger_enableInterrupt     = true;
+epwm1.epwmEventTrigger_registerInterrupts  = true;
+epwm1.epwmEventTrigger_interruptSource     = "EPWM_INT_TBCTR_ZERO";
+epwm1.epwmEventTrigger_interruptEventCount = "1";
+epwm1.epwmTimebase_counterMode             = "EPWM_COUNTER_MODE_UP_DOWN";
+epwm1.epwmInt.enableInterrupt              = true;
+
+gpio1.$name           = "myGPIO0";
+gpio1.direction       = "GPIO_DIR_MODE_OUT";
+gpio1.gpioPin.$assign = "GPIO0";
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+epwm1.epwm.$suggestSolution = "EPWM1";
