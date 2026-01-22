@@ -4,9 +4,7 @@
  */
 #include "driverlib.h"
 #include "device.h"
-#include "modules/dds_core.h"
-#include "modules/dds_ipc.h"
-#include "modules/dds_config.h"
+#include "dds.h"  // All-in-One DDS Header
 
 // Shared Memory Definition
 #pragma DATA_SECTION(g_DDS_Shared, "SHARERAMGS0");
