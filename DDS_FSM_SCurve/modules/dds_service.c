@@ -369,16 +369,16 @@ void DDS_Service_GetData(DDS_Transfer_t* pOut) {
         // Check if cutting is actually needed (optimization)
         if (on_deg > 0.1f || off_deg < 359.9f) {
             pOut->feature_flags |= DDS_FLAG_PHASE_CUT_EN;
-            pOut->phase_cut_on = (uint16_t)on_deg;
-            pOut->phase_cut_off = (uint16_t)off_deg;
+            pOut->phase_cut_on = on_deg;
+            pOut->phase_cut_off = off_deg;
         } else {
-            pOut->phase_cut_on = 0;
-            pOut->phase_cut_off = 360;
+            pOut->phase_cut_on = 0.0f;
+            pOut->phase_cut_off = 360.0f;
         }
     } else {
         // Disabled: Full Wave
-        pOut->phase_cut_on = 0;
-        pOut->phase_cut_off = 360;
+        pOut->phase_cut_on = 0.0f;
+        pOut->phase_cut_off = 360.0f;
     }
 }
 

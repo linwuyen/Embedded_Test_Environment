@@ -5,15 +5,6 @@
 #ifndef DDS_CORE_H
 #define DDS_CORE_H
 #include "dds_defs.h"
-// ...
-void DDS_SetArbWaveform(DDS_Handle_t* pDDS, float* buffer);
-
-// [NEW] Batch Update API (Decoupled)
-void DDS_ApplySettings(DDS_Handle_t* pDDS, const DDS_Transfer_t* pData);
-
-float DDS_Update(DDS_Handle_t* pDDS);
-
-#endif
 
 #define DDS_LUT_SIZE 1024 
 

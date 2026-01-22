@@ -26,8 +26,8 @@ typedef struct {
     float    dither_amount; // [New] 0.0 - 0.1
     float    slew_rate;     // V/sample
     uint16_t deadtime_ticks;
-    uint16_t phase_cut_on;  // [New] Start Angle (0-360)
-    uint16_t phase_cut_off; // [New] End Angle (0-360)
+    float    phase_cut_on;  // [Fixed] Start Angle (0.0-360.0)
+    float    phase_cut_off; // [Fixed] End Angle (0.0-360.0)
 } DDS_Transfer_t;
 
 // Feature Flag Definitions

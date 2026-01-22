@@ -123,6 +123,17 @@ void DDS_ApplySettings(DDS_Handle_t* pDDS, const DDS_Transfer_t* pData) {
     }
 }
 
+// [NEW] Hardware Protection Stub
+static inline void DDS_Hardware_Protect_Check(DDS_Handle_t* pDDS) {
+#if DDS_ENABLE_HARDWARE_PROTECT
+    // TODO: Implement actual hardware protection checks
+    // Example for F28377D:
+    // if (EPWM_getTripZoneFlagStatus(EPWM1_BASE) & EPWM_TZ_FLAG_OST) {
+    //     pDDS->v_set = 0.0f; // Force shutdown
+    // }
+#endif
+}
+
 #pragma CODE_SECTION(DDS_Update, ".TI.ramfunc");
 float DDS_Update(DDS_Handle_t* pDDS) {
     // 檢查硬體保護

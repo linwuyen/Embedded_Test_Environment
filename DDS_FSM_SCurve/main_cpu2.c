@@ -17,8 +17,11 @@ uint16_t last_seq_id = 0;
 
 // Flash-to-RAM copy variables
 extern uint16_t RamfuncsLoadStart;
+extern uint16_t RamfuncsLoadEnd;
 extern uint16_t RamfuncsLoadSize;
 extern uint16_t RamfuncsRunStart;
+extern uint16_t RamfuncsRunEnd;
+extern uint16_t RamfuncsRunSize;
 
 __interrupt void epwm1_isr(void);
 
