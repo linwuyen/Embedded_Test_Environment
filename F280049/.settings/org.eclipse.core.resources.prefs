@@ -1,4 +1,14 @@
 eclipse.preferences.version=1
+encoding//CPU1_FLASH/ADC_Module/subdir_rules.mk=UTF-8
+encoding//CPU1_FLASH/ADC_Module/subdir_vars.mk=UTF-8
+encoding//CPU1_FLASH/CLA_Module/subdir_rules.mk=UTF-8
+encoding//CPU1_FLASH/CLA_Module/subdir_vars.mk=UTF-8
+encoding//CPU1_FLASH/DDS_Module/subdir_rules.mk=UTF-8
+encoding//CPU1_FLASH/DDS_Module/subdir_vars.mk=UTF-8
+encoding//CPU1_FLASH/Diagnostic/subdir_rules.mk=UTF-8
+encoding//CPU1_FLASH/Diagnostic/subdir_vars.mk=UTF-8
+encoding//CPU1_FLASH/WaveGen_Manager/subdir_rules.mk=UTF-8
+encoding//CPU1_FLASH/WaveGen_Manager/subdir_vars.mk=UTF-8
 encoding//CPU1_FLASH/device/driverlib/subdir_rules.mk=UTF-8
 encoding//CPU1_FLASH/device/driverlib/subdir_vars.mk=UTF-8
 encoding//CPU1_FLASH/device/subdir_rules.mk=UTF-8

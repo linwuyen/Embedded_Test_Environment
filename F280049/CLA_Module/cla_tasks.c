@@ -42,6 +42,15 @@ void CLA_Module_Init(void)
     g_CLA_PID.f32PrevError = 0.0f;
     g_CLA_PID.f32Output = 0.0f;
     
+    // Copy CLA program from Flash to RAM
+    // The symbols are defined in the linker command file
+    extern uint32_t Cla1ProgLoadStart;
+    extern uint32_t Cla1ProgLoadEnd;
+    extern uint32_t Cla1ProgRunStart;
+    
+    memcpy((uint32_t *)&Cla1ProgRunStart, (uint32_t *)&Cla1ProgLoadStart,
+           (uint32_t)&Cla1ProgLoadEnd - (uint32_t)&Cla1ProgLoadStart);
+    
     // Note: CLA hardware initialization is done in Board_init() via SysConfig
 }
 

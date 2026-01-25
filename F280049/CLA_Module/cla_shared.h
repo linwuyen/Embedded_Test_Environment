@@ -51,13 +51,6 @@ typedef struct {
     
 } Cla1ToCpu_t;
 
-// Memory Section Pragmas
-#pragma DATA_SECTION(CpuToCla1, "CpuToCla1MsgRAM");
-extern CpuToCla1_t CpuToCla1;
-
-#pragma DATA_SECTION(Cla1ToCpu, "Cla1ToCpuMsgRAM");
-extern Cla1ToCpu_t Cla1ToCpu;
-
 // PID State (in CLA Data RAM)
 typedef struct {
     float f32Integral;
@@ -65,7 +58,9 @@ typedef struct {
     float f32Output;
 } CLA_PID_t;
 
-#pragma DATA_SECTION(g_CLA_PID, "Cla1DataRam0");
+// External declarations (must be declared before pragma in header files)
+extern CpuToCla1_t CpuToCla1;
+extern Cla1ToCpu_t Cla1ToCpu;
 extern CLA_PID_t g_CLA_PID;
 
 #endif /* CLA_MODULE_CLA_SHARED_H_ */

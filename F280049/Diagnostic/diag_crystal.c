@@ -10,7 +10,7 @@
 #include "diag_crystal.h"
 
 // Global Diagnostic Status
-Diag_Status_t g_Diag_Status = {0};
+Diag_Status_t g_Diag_Status = {.eMode = DIAG_MODE_NORMAL, .u16TestRunning = 0, .u16TestPassed = 0};
 
 /*
  * Diag_Init
@@ -91,21 +91,21 @@ void Diag_PWMTest(void)
 {
     g_Diag_Status.u16TestRunning = 1;
     
-    // Configure EPWM0 for test output
+    // Configure EPWM for test output (using CLK0_5)
     // Set action qualifier to generate square wave
-    EPWM_setActionQualifierAction(myEPWM0_BASE,
+    EPWM_setActionQualifierAction(CLK0_5_BASE,
                                   EPWM_AQ_OUTPUT_A,
                                   EPWM_AQ_OUTPUT_HIGH,
                                   EPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO);
     
-    EPWM_setActionQualifierAction(myEPWM0_BASE,
+    EPWM_setActionQualifierAction(CLK0_5_BASE,
                                   EPWM_AQ_OUTPUT_A,
                                   EPWM_AQ_OUTPUT_LOW,
                                   EPWM_AQ_OUTPUT_ON_TIMEBASE_PERIOD);
     
     // Set 50% duty cycle for test
-    uint16_t period = EPWM_getTimeBasePeriod(myEPWM0_BASE);
-    EPWM_setCounterCompareValue(myEPWM0_BASE, 
+    uint16_t period = EPWM_getTimeBasePeriod(CLK0_5_BASE);
+    EPWM_setCounterCompareValue(CLK0_5_BASE, 
                                 EPWM_COUNTER_COMPARE_A, 
                                 period / 2);
     
@@ -121,13 +121,11 @@ void Diag_ADCTest(void)
     g_Diag_Status.u16TestRunning = 1;
     
     // Force ADC software trigger for testing
-    ADC_forceSOC(ADCA_BASE, ADC_SOC_NUMBER0);
-    ADC_forceSOC(ADCA_BASE, ADC_SOC_NUMBER1);
-    ADC_forceSOC(ADCA_BASE, ADC_SOC_NUMBER2);
-    ADC_forceSOC(ADCA_BASE, ADC_SOC_NUMBER3);
+    ADC_forceSOC(CV_AD_BASE, CV_AD_SOC0);
+    // Note: Only one ADC channel configured in SysConfig
     
     // Wait for conversion
-    while(!ADC_getInterruptStatus(ADCA_BASE, ADC_INT_NUMBER1));
+    while(!ADC_getInterruptStatus(CV_AD_BASE, ADC_INT_NUMBER1));
     
     // Read results (validation done in ADC module)
     // Test passes if ADC values are within expected range
@@ -147,7 +145,7 @@ void Diag_CLATest(void)
     CLA_TriggerSPWM(0.0f, 1.0f);  // 0 degrees, full modulation
     
     // Wait for CLA to complete
-    while(!CLA_getTaskRunStatus(CLA1_BASE, CLA_TASKFLAG_1));
+    while(!CLA_getTaskRunStatus(CLA1_BASE, (CLA_TaskNumber)CLA_TASKFLAG_1));
     
     // Verify results (duty cycles should be around 0.5)
     // Test passes if CLA executes without errors

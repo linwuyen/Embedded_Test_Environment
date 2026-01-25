@@ -12,7 +12,7 @@
 #include "../SPWM_Ctrl.h"
 
 // Global Status
-WaveGen_Status_t g_WaveGen_Status = {0};
+WaveGen_Status_t g_WaveGen_Status = {.eMode = WAVEGEN_MODE_SPWM, .u16Enabled = 0, .u16ModeChanged = 0};
 
 /*
  * WaveGen_Init
@@ -33,6 +33,29 @@ void WaveGen_Init(void)
     // Initialize both generators
     DDS_Init();
     // SPWM_Init(); // If SPWM has init function
+    
+    // Configure EPWM1 (CLK0_5) for DDS PWM-DAC output
+    // Use high-frequency PWM (~500kHz) to simulate DAC
+    EPWM_setTimeBasePeriod(CLK0_5_BASE, 100);  // 100MHz / 2 / 100 = 500kHz PWM
+    EPWM_setTimeBaseCounterMode(CLK0_5_BASE, EPWM_COUNTER_MODE_UP);
+    
+    // Set Action Qualifier for PWM mode
+    EPWM_setActionQualifierAction(CLK0_5_BASE, EPWM_AQ_OUTPUT_A,
+                                  EPWM_AQ_OUTPUT_LOW,
+                                  EPWM_AQ_OUTPUT_ON_TIMEBASE_ZERO);
+    EPWM_setActionQualifierAction(CLK0_5_BASE, EPWM_AQ_OUTPUT_A,
+                                  EPWM_AQ_OUTPUT_HIGH,
+                                  EPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPA);
+    
+    // Initialize compare value to mid-point
+    EPWM_setCounterCompareValue(CLK0_5_BASE, EPWM_COUNTER_COMPARE_A, 50);
+    
+    // Configure EPWM1 interrupt for DDS ISR (200kHz update rate)
+    // Trigger every 250 PWM cycles: 500kHz / 250 = 2kHz... 
+    // Actually, let's use period interrupt at 500kHz / 2.5 = 200kHz
+    EPWM_setInterruptSource(CLK0_5_BASE, EPWM_INT_TBCTR_ZERO);
+    EPWM_setInterruptEventCount(CLK0_5_BASE, 3);  // Every 3rd event = 500kHz/3 ≈ 167kHz
+    EPWM_enableInterrupt(CLK0_5_BASE);
 }
 
 /*
@@ -181,8 +204,8 @@ void WaveGen_ISR_Update(void)
         
         // Option 2: Use PWM to simulate DAC
         float duty = (float)dacValue / 4095.0f;
-        uint16_t period = EPWM_getTimeBasePeriod(myEPWM0_BASE);
-        EPWM_setCounterCompareValue(myEPWM0_BASE, 
+        uint16_t period = EPWM_getTimeBasePeriod(CLK0_5_BASE);
+        EPWM_setCounterCompareValue(CLK0_5_BASE, 
                                     EPWM_COUNTER_COMPARE_A, 
                                     (uint16_t)(duty * period));
     } else {

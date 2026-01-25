@@ -54,11 +54,11 @@ void ADC_Module_Init(void)
  */
 void ADC_ReadAll(void)
 {
-    // Read raw ADC values
-    g_ADC_Data.u16Raw_Current_A = ADC_readResult(ADCA_RESULT_BASE, ADC_CH_CURRENT_A);
-    g_ADC_Data.u16Raw_Current_B = ADC_readResult(ADCA_RESULT_BASE, ADC_CH_CURRENT_B);
-    g_ADC_Data.u16Raw_Current_C = ADC_readResult(ADCA_RESULT_BASE, ADC_CH_CURRENT_C);
-    g_ADC_Data.u16Raw_Voltage_DC = ADC_readResult(ADCA_RESULT_BASE, ADC_CH_VOLTAGE_DC);
+    // Read raw ADC values (using configured ADC from SysConfig)
+    g_ADC_Data.u16Raw_Current_A = ADC_readResult(CV_AD_RESULT_BASE, CV_AD_SOC0);
+    g_ADC_Data.u16Raw_Current_B = 0;  // Not configured in SysConfig
+    g_ADC_Data.u16Raw_Current_C = 0;  // Not configured in SysConfig
+    g_ADC_Data.u16Raw_Voltage_DC = 0; // Not configured in SysConfig
     
     s_u32SampleCount++;
 }

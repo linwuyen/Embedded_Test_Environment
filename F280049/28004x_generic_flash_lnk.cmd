@@ -74,6 +74,10 @@ PAGE 1 :
    RAMGS2      : origin = 0x010000, length = 0x002000
    RAMGS3      : origin = 0x012000, length = 0x001FF8
 //   RAMGS3_RSVD : origin = 0x013FF8, length = 0x000008     /* Reserve and do not use for code as per the errata advisory "Memory: Prefetching Beyond Valid Memory" */
+
+   /* CLA Memory - F280049 CLA Memory Map */
+   CLA1_MSGRAMLOW   : origin = 0x001480, length = 0x000080  /* CLA to CPU Message RAM */
+   CLA1_MSGRAMHIGH  : origin = 0x001500, length = 0x000080  /* CPU to CLA Message RAM */
 }
 
 
@@ -93,8 +97,8 @@ SECTIONS
    .bss:cio         : > RAMLS0,       PAGE = 0
    .data            : > RAMLS5,       PAGE = 1
    .sysmem          : > RAMLS5,       PAGE = 1
-   /* Initalized sections go in Flash */
-   .const           : > FLASH_BANK0_SEC4,       PAGE = 0,       ALIGN(4)
+   /* Initalized sections go in Flash - use Bank 1 for large DDS lookup table */
+   .const           : >> FLASH_BANK1_SEC0 | FLASH_BANK1_SEC1 | FLASH_BANK1_SEC2 | FLASH_BANK1_SEC3 | FLASH_BANK1_SEC4,  PAGE = 0, ALIGN(4)
 
 
 
@@ -122,6 +126,19 @@ SECTIONS
       RUN_END(fapi_ram_RunEnd),
       PAGE = 0, ALIGN(4)
 
+   /* CLA Sections - Using available RAM */
+   Cla1Prog         : LOAD = FLASH_BANK0_SEC9,
+                       RUN = RAMLS4,
+                       LOAD_START(Cla1ProgLoadStart),
+                       LOAD_END(Cla1ProgLoadEnd),
+                       RUN_START(Cla1ProgRunStart),
+                       PAGE = 0, ALIGN(4)
+   
+   CpuToCla1MsgRAM  : > CLA1_MSGRAMLOW,   PAGE = 1
+   Cla1ToCpuMsgRAM  : > CLA1_MSGRAMHIGH,  PAGE = 1
+   
+   Cla1DataRam0     : > RAMLS6,           PAGE = 1
+   Cla1DataRam1     : > RAMLS7,           PAGE = 1
 }
 
 /*

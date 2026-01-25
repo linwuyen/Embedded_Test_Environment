@@ -21,9 +21,9 @@ void DDS_Init(void)
     v->Cmd.fOffset_V      = 1.65f;    // 1.65V (Mid-rail)
     v->Cmd.fPhase_Deg     = 0.0f;     // 0 deg
     
-    v->Cmd.u32DelayOn_ms  = 10;
+    v->Cmd.u32DelayOn_ms  = 1;      // 1ms startup delay
     v->Cmd.u32DelayOff_ms = 10;
-    v->Cmd.fSlewRate_sec  = 1.0f;    // 0.01s Slew Time
+    v->Cmd.fSlewRate_sec  = 0.1f;   // 0.1s Slew Time (faster startup)
     v->Cmd.WaveType       = WAVE_SINE;
 
     // 2. Initialize Internal States (Derived from Physical Defaults)

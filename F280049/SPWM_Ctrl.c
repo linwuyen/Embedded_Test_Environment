@@ -276,16 +276,7 @@ void Setup_EPWM(HAL_sPWM p)
     EPWM_disableFallingEdgeDelayCountShadowLoadMode(p->u32BASE);
 }
 
-void init_EPWM(void)
-{
-    SysCtl_disablePeripheral(SYSCTL_PERIPH_CLK_TBCLKSYNC);
 
-    Setup_EPWM(&CLK0);
-    Setup_EPWM(&CLK180);
-    Setup_EPWM(&FANCTRL5);
-
-    SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_TBCLKSYNC);
-}
 
 
 void updateFANCTRL5Duty( void)
@@ -297,9 +288,9 @@ void updateFANCTRL5Duty( void)
 //========================SPIA=============================
 
 //200k 5us
-sPWM pwm200kCfg = { .u32BASE = EPWM4_BASE, .u16TBperiodCount = 499, // 200kHz ™∫ TBPRD
-                    .u16count = 0,              // ™Ï©l≠pº∆≠»
-                    .u16phaseCount = 0,              // µL¨€¶Ï∞æ≤æ
+sPWM pwm200kCfg = { .u32BASE = EPWM4_BASE, .u16TBperiodCount = 499, // 200kHz ÁöÑ TBPRD
+                    .u16count = 0,              // ÂàùÂßãË®àÊï∏ÂÄº
+                    .u16phaseCount = 0,              // ÁÑ°Áõ∏‰ΩçÂÅèÁßª
                     .u16CompCount = 250 };
 //Event-Trigger
 void EPWM_TRIGER_ADC(HAL_sPWM p)
@@ -319,6 +310,21 @@ void EPWM_TRIGER_ADC(HAL_sPWM p)
     EPWM_setADCTriggerSource(p->u32BASE, EPWM_SOC_A, EPWM_SOC_TBCTR_PERIOD);
     EPWM_setADCTriggerEventPrescale(p->u32BASE, EPWM_SOC_A, 1);
 
+}
+
+void init_EPWM(void)
+{
+    SysCtl_disablePeripheral(SYSCTL_PERIPH_CLK_TBCLKSYNC);
+
+//    Setup_EPWM(&CLK0);
+//    Setup_EPWM(&CLK180);
+//    Setup_EPWM(&FANCTRL5);
+//
+//    // Initialize EPWM4 for ADC triggering (200kHz)
+//    // Must be done here to ensure ADC interrupts start immediately
+//    EPWM_TRIGER_ADC(&pwm200kCfg);
+
+    SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_TBCLKSYNC);
 }
 
 
@@ -361,7 +367,7 @@ ST_SPIA sSPIA = { .REGFIFO = 0,
 
         RXInterrupt_init();
         //Disable PWM trigger ADC 200K
-        Interrupt_disable(INT_ADCA1);
+        // Interrupt_disable(INT_ADCA1);  // ‚≠ê Commented out to keep ADC ISR running for testing
         EPWM_TRIGER_ADC(&pwm200kCfg);
         Reset_SPI_GPIO();
         #if (SetControlGPIO == Card)
@@ -436,39 +442,18 @@ __interrupt void INT_mySPI0_RX_ISR(void){
 ////__interrupt void INT_mySPI0_TX_ISR(void){}
 
 
-// Master
-// PWM 200k 5us trigger
-__interrupt void INT_CV_AD_1_ISR(void){
-    measTimerLength(&TimerTX);
 
-//    sSPIA.REGFIFO[sSPIA.u16push].Package.u16CV_AD = ADC_readResult(CV_AD_RESULT_BASE, ADC_SOC_NUMBER0);
-//    sSPIA.u16push ^= 1;  // ≥Êæ˜∑|¨€Æt10us
 //
-//    DAC_setShadowValue(CC_DA_BASE, sSPIA.REGFIFO[sSPIA.u16push].Package.u16CV_AD);
+//// Dedicated DDS ISR (triggered by EPWM1 - 200kHz)
+//// This ISR only handles DDS waveform generation
+//__interrupt void INT_DDS_ISR(void) {
+//    // DDS Waveform Generation only
+//    WaveGen_ISR_Update();
 //
-//    sSPIA.REGFIFO[sSPIA.u16push].Package.u16check = (sSPIA.REGFIFO[sSPIA.u16push].Package.u16CV_AD + 0x1234) &0xF;
-//    SPI_writeDataNonBlocking(mySPI0_BASE, sSPIA.REGFIFO[sSPIA.u16push].u16AllData);
-//-----------------------
-        //Current
-        sSPIA.REGFIFO[sSPIA.u16push].Package.u16CV_AD = ADC_readResult(CV_AD_RESULT_BASE, ADC_SOC_NUMBER0);
-
-        //Next
-        sSPIA.u16pull_dac = (sSPIA.u16push + 1) % FIFO_SIZE;
-
-        //Previous
-        sSPIA.u16pull_slave = (sSPIA.u16push + FIFO_SIZE - 1) % FIFO_SIZE;
-
-        sSPIA.REGFIFO[sSPIA.u16pull_slave].Package.u16check = (sSPIA.REGFIFO[sSPIA.u16pull_slave].Package.u16CV_AD + 0x1234) & 0xF;
-
-        SPI_writeDataNonBlocking(mySPI0_BASE, sSPIA.REGFIFO[sSPIA.u16pull_slave].u16AllData);
-
-        DAC_setShadowValue(CC_DA_BASE, sSPIA.REGFIFO[sSPIA.u16pull_dac].Package.u16CV_AD);
-
-        sSPIA.u16push = (sSPIA.u16push + 1) % FIFO_SIZE;
-
-    ADC_clearInterruptStatus(CV_AD_BASE, ADC_INT_NUMBER1);
-    Interrupt_clearACKGroup(INT_CV_AD_1_INTERRUPT_ACK_GROUP);
-}
+//    // Clear interrupt flags
+//    EPWM_clearEventTriggerInterruptFlag(CLK0_5_BASE);
+//    Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP3);
+//}
 
 #ifdef _FLASH
 #pragma SET_CODE_SECTION()

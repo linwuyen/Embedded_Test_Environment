@@ -7,9 +7,14 @@
 #include "cla_shared.h"
 #include <CLAmath.h>
 
-// Shared Memory Instances
+// Shared Memory Instances with memory section pragmas
+#pragma DATA_SECTION(CpuToCla1, "CpuToCla1MsgRAM");
 CpuToCla1_t CpuToCla1;
+
+#pragma DATA_SECTION(Cla1ToCpu, "Cla1ToCpuMsgRAM");
 Cla1ToCpu_t Cla1ToCpu;
+
+#pragma DATA_SECTION(g_CLA_PID, "Cla1DataRam0");
 CLA_PID_t g_CLA_PID;
 
 // Constants

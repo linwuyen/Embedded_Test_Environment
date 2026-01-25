@@ -78,13 +78,13 @@ void asapTask(void * s){
 
     excSpiSlave(&sSpiS);
     runUserBox();
-    SPIA_Control();
+//    SPIA_Control();
 
 }
 
 ST_TIMETASK time_task[] = {
         {task_ADC_Process,    0,   T_100US},   // ADC processing at 100us (10kHz)
-        {WaveGen_Task,        0,   T_1MS},     // Waveform generator task (DDS/SPWM)
+        {(void (*)(void *))WaveGen_Task, 0, T_1MS},  // Waveform generator task (DDS/SPWM)
         {task1msec,           0,   T_1MS},
         {task500msec,         0,   T_500MS},
         {asapTask,            0,   0},

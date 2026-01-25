@@ -8,6 +8,8 @@
 #ifndef C28PARAM_H_
 #define C28PARAM_H_
 
+#include "device.h"
+
 #define FG_GET(x, src)   ((src & (x)) == (x))
 #define FG_GETn(x, src)  (!FG_GET(x, src))
 #define FG_AND(x, src)   (src & (x))

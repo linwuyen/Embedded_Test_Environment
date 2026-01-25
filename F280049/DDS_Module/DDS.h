@@ -10,6 +10,7 @@
 #define DDS_H_
 
 #include <stdint.h>
+#include <math.h>  // For sinf() function
 #include "lut.h"
 #include "DDS_UserConfig.h" // Import User Configuration
 
@@ -148,7 +149,7 @@ extern void DDS_SetSlewTime(DDS_Handle v, float time_sec); // Helper
 extern void DDS_Task(void); // Matches SysTick_Task type
 
 
-// Core Engine (Inline)
+// Core Engine (Inline) - Using sin() function instead of LUT
 // Returns: Raw DAC Code (0-4095)
 static inline uint16_t DDS_Run_Core(DDS_Handle v)
 {
@@ -159,14 +160,22 @@ static inline uint16_t DDS_Run_Core(DDS_Handle v)
     DDS_Acc TotalACC;
     TotalACC.u32All = v->Engine.PhaseAcc.u32All + v->Engine.u32PhaseWord;
 
-    // 3. Lookup (Q24 Integer)
-    uint32_t u32LutVal = v->Engine.pLUT[TotalACC.u32Index];
+    // 3. Calculate sine value using math library
+    // Convert 32-bit phase to radians (0 to 2π)
+    float phase_rad = (float)TotalACC.u32All * (2.0f * 3.14159265f / 4294967296.0f);
+    
+    // Calculate sine (-1.0 to 1.0)
+    float sine_val = sinf(phase_rad);
+    
+    // Convert to 0.0 to 1.0 range
+    float normalized = (sine_val + 1.0f) * 0.5f;
+    
+    // Convert to Q24 format
+    uint32_t u32SinVal = (uint32_t)(normalized * 16777216.0f);
 
     // 4. Output Calculation (Fixed Point)
-    // Formula: (LUT_Q24 * Scale_Q0) >> 24 + Bias_Q0
-    // We use uint64_t cast to prevent 32-bit overflow during multiplication
-    // (16M * 4096 = 68 Billion, which fits in 64-bit)
-    uint32_t u32Output = (uint32_t)(((uint64_t)u32LutVal * v->Engine.u32OutScale) >> 24) + v->Engine.u32OutBias;
+    // Formula: (Sin_Q24 * Scale_Q0) >> 24 + Bias_Q0
+    uint32_t u32Output = (uint32_t)(((uint64_t)u32SinVal * v->Engine.u32OutScale) >> 24) + v->Engine.u32OutBias;
 
     // 5. Saturation (DAC Limit)
     if(u32Output > 4095) u32Output = 4095;

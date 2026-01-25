@@ -10,7 +10,7 @@
 
 #include <stdint.h> // For int16_t, int32_t
 
-#define LUT_SIZE 4096
+#define LUT_SIZE 1024  // Reduced from 4096 to fit in Flash (8KB total for 2 tables)
 
 
 
