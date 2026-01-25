@@ -1,8 +1,0 @@
-{
-    "interruptInfo" : [
-        {
-            "interruptName": "INT_myEPWM0",
-            "interruptHandler": "INT_myEPWM0_ISR"
-        }
-    ]
-}

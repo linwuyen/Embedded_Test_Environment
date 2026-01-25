@@ -1,0 +1,166 @@
+/*
+ * cla_tasks.cla
+ *
+ * CLA Task Implementations
+ */
+
+#include "cla_shared.h"
+#include <CLAmath.h>
+
+// Shared Memory Instances
+CpuToCla1_t CpuToCla1;
+Cla1ToCpu_t Cla1ToCpu;
+CLA_PID_t g_CLA_PID;
+
+// Constants
+#define PI              3.14159265f
+#define TWO_PI          6.28318531f
+#define DEG_TO_RAD      0.01745329f
+#define SQRT3           1.73205081f
+#define SQRT3_DIV_2     0.86602540f
+#define TWO_DIV_3       0.66666667f
+
+/*
+ * Cla1Task1 - SPWM Calculation
+ * Calculate three-phase PWM duty cycles using sinusoidal modulation
+ */
+__interrupt void Cla1Task1(void)
+{
+    float phase_rad;
+    float sinVal, cosVal;
+    float modulation;
+    
+    // Convert phase to radians
+    phase_rad = CpuToCla1.f32Phase * DEG_TO_RAD;
+    
+    // Get modulation index
+    modulation = CpuToCla1.f32Modulation;
+    
+    // Clamp modulation to 0-1
+    if (modulation > 1.0f) modulation = 1.0f;
+    if (modulation < 0.0f) modulation = 0.0f;
+    
+    // Calculate sine and cosine
+    sinVal = CLAsin(phase_rad);
+    cosVal = CLAcos(phase_rad);
+    
+    // Calculate three-phase duty cycles
+    // Phase A: sin(θ)
+    Cla1ToCpu.f32DutyA = 0.5f + 0.5f * modulation * sinVal;
+    
+    // Phase B: sin(θ - 120°)
+    Cla1ToCpu.f32DutyB = 0.5f + 0.5f * modulation * CLAsin(phase_rad - TWO_PI / 3.0f);
+    
+    // Phase C: sin(θ + 120°)
+    Cla1ToCpu.f32DutyC = 0.5f + 0.5f * modulation * CLAsin(phase_rad + TWO_PI / 3.0f);
+    
+    // Clamp duty cycles to 0-1
+    if (Cla1ToCpu.f32DutyA > 1.0f) Cla1ToCpu.f32DutyA = 1.0f;
+    if (Cla1ToCpu.f32DutyA < 0.0f) Cla1ToCpu.f32DutyA = 0.0f;
+    
+    if (Cla1ToCpu.f32DutyB > 1.0f) Cla1ToCpu.f32DutyB = 1.0f;
+    if (Cla1ToCpu.f32DutyB < 0.0f) Cla1ToCpu.f32DutyB = 0.0f;
+    
+    if (Cla1ToCpu.f32DutyC > 1.0f) Cla1ToCpu.f32DutyC = 1.0f;
+    if (Cla1ToCpu.f32DutyC < 0.0f) Cla1ToCpu.f32DutyC = 0.0f;
+    
+    Cla1ToCpu.u16TaskComplete = 1;
+}
+
+/*
+ * Cla1Task2 - PID Controller
+ * Calculate PID control output
+ */
+__interrupt void Cla1Task2(void)
+{
+    float error;
+    float p_term, i_term, d_term;
+    
+    // Calculate error
+    error = CpuToCla1.f32Target - CpuToCla1.f32Feedback;
+    
+    // Proportional term
+    p_term = CpuToCla1.f32Kp * error;
+    
+    // Integral term (with anti-windup)
+    g_CLA_PID.f32Integral += CpuToCla1.f32Ki * error;
+    
+    // Anti-windup: clamp integral
+    if (g_CLA_PID.f32Integral > 1.0f) g_CLA_PID.f32Integral = 1.0f;
+    if (g_CLA_PID.f32Integral < -1.0f) g_CLA_PID.f32Integral = -1.0f;
+    
+    i_term = g_CLA_PID.f32Integral;
+    
+    // Derivative term
+    d_term = CpuToCla1.f32Kd * (error - g_CLA_PID.f32PrevError);
+    
+    // Calculate output
+    g_CLA_PID.f32Output = p_term + i_term + d_term;
+    
+    // Clamp output
+    if (g_CLA_PID.f32Output > 1.0f) g_CLA_PID.f32Output = 1.0f;
+    if (g_CLA_PID.f32Output < -1.0f) g_CLA_PID.f32Output = -1.0f;
+    
+    // Update previous error
+    g_CLA_PID.f32PrevError = error;
+    
+    // Output results
+    Cla1ToCpu.f32PID_Output = g_CLA_PID.f32Output;
+    Cla1ToCpu.f32PID_Integral = g_CLA_PID.f32Integral;
+    
+    Cla1ToCpu.u16TaskComplete = 2;
+}
+
+/*
+ * Cla1Task3 - Clarke Transform
+ * Transform three-phase currents to alpha-beta stationary frame
+ */
+__interrupt void Cla1Task3(void)
+{
+    float ia, ib, ic;
+    
+    // Get three-phase currents
+    ia = CpuToCla1.f32Current_A;
+    ib = CpuToCla1.f32Current_B;
+    ic = CpuToCla1.f32Current_C;
+    
+    // Clarke Transform
+    // α = Ia
+    // β = (Ia + 2*Ib) / √3
+    
+    Cla1ToCpu.f32Alpha = ia;
+    Cla1ToCpu.f32Beta = (ia + 2.0f * ib) / SQRT3;
+    
+    Cla1ToCpu.u16TaskComplete = 3;
+}
+
+/*
+ * Cla1Task4 - Park Transform
+ * Transform alpha-beta to d-q rotating frame
+ */
+__interrupt void Cla1Task4(void)
+{
+    float alpha, beta;
+    float phase_rad;
+    float sinVal, cosVal;
+    
+    // Get alpha-beta values (from Task 3)
+    alpha = Cla1ToCpu.f32Alpha;
+    beta = Cla1ToCpu.f32Beta;
+    
+    // Get phase angle
+    phase_rad = CpuToCla1.f32Phase * DEG_TO_RAD;
+    
+    // Calculate sine and cosine
+    sinVal = CLAsin(phase_rad);
+    cosVal = CLAcos(phase_rad);
+    
+    // Park Transform
+    // d =  α*cos(θ) + β*sin(θ)
+    // q = -α*sin(θ) + β*cos(θ)
+    
+    Cla1ToCpu.f32D =  alpha * cosVal + beta * sinVal;
+    Cla1ToCpu.f32Q = -alpha * sinVal + beta * cosVal;
+    
+    Cla1ToCpu.u16TaskComplete = 4;
+}
