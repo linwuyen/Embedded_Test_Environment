@@ -1,6 +1,6 @@
 """
-台股半導體量化交易系統 - 主程式
-Taiwan Semiconductor Quantitative Trading System - Main Program
+台股半導體與 AI 概念股量化交易系統 - 主程式
+Taiwan Semiconductor & AI Quantitative Trading System - Main Program
 """
 
 import pandas as pd
@@ -12,8 +12,9 @@ import os
 # 加入 src 到路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from config import BACKTEST_CONFIG, SEMICONDUCTOR_STOCKS
+from config import BACKTEST_CONFIG, SEMICONDUCTOR_STOCKS, SEMI_AI_STOCKS
 from src.data_loader import TaiwanStockDataLoader
+
 from src.indicators import TechnicalIndicators
 from src.strategies import StrategyManager
 from src.backtester import Backtester
@@ -23,12 +24,12 @@ from src.visualizer import Visualizer
 def main():
     """主程式"""
     print("=" * 80)
-    print("台股半導體量化交易系統")
-    print("Taiwan Semiconductor Quantitative Trading System")
+    print("台股半導體與 AI 概念股量化交易系統")
+    print("Taiwan Semiconductor & AI Quantitative Trading System")
     print("=" * 80)
     
     # ==================== 1. 資料載入 ====================
-    print("\n【步驟 1】載入股票資料...")
+    print("\n【步驟 1】載入 AI 半導體相關股票資料...")
     loader = TaiwanStockDataLoader()
     
     # 獲取處理後的資料
@@ -36,6 +37,15 @@ def main():
         start_date=BACKTEST_CONFIG['start_date'],
         end_date=BACKTEST_CONFIG['end_date']
     )
+
+    # 僅保留台積電 (2330.TW)
+    target_stock = '2330.TW'
+    if target_stock in data:
+        data = {target_stock: data[target_stock]}
+        print(f"\n[Info] 僅分析 {SEMI_AI_STOCKS[target_stock]} ({target_stock})")
+    else:
+        print(f"\n[Error] 找不到 {target_stock} 的資料")
+        return
     
     # 顯示資料摘要
     print("\n資料摘要:")
@@ -49,7 +59,7 @@ def main():
     for symbol, df in data.items():
         df_indicators = TechnicalIndicators.add_all_indicators(df)
         data_with_indicators[symbol] = df_indicators
-        print(f"  ✓ {SEMICONDUCTOR_STOCKS[symbol]} ({symbol}): 已添加技術指標")
+        print(f"  [v] {SEMI_AI_STOCKS[symbol]} ({symbol}): 已添加技術指標")
     
     # ==================== 3. 生成交易訊號 ====================
     print("\n【步驟 3】生成交易訊號...")
@@ -65,7 +75,7 @@ def main():
         # 統計訊號數量
         buy_count = (df_signals['signal'] == 1).sum()
         sell_count = (df_signals['signal'] == -1).sum()
-        print(f"  ✓ {SEMICONDUCTOR_STOCKS[symbol]} ({symbol}): "
+        print(f"  [v] {SEMI_AI_STOCKS[symbol]} ({symbol}): "
               f"買入訊號 {buy_count} 個, 賣出訊號 {sell_count} 個")
     
     # ==================== 4. 執行回測 ====================
@@ -75,7 +85,7 @@ def main():
     all_results = {}
     
     for symbol, df in data_with_signals.items():
-        print(f"\n回測 {SEMICONDUCTOR_STOCKS[symbol]} ({symbol})...")
+        print(f"\n回測 {SEMI_AI_STOCKS[symbol]} ({symbol})...")
         results = backtester.run_backtest(df)
         all_results[symbol] = results
         
@@ -96,7 +106,7 @@ def main():
         metrics = results['metrics']
         comparison_data.append({
             '股票代碼': symbol,
-            '股票名稱': SEMICONDUCTOR_STOCKS[symbol],
+            '股票名稱': SEMI_AI_STOCKS[symbol],
             '總報酬率': metrics['總報酬率'],
             '年化報酬率': metrics['年化報酬率'],
             '夏普比率': metrics['夏普比率'],
@@ -111,14 +121,16 @@ def main():
     print("\n績效排名:")
     print(comparison_df.to_string(index=False))
     
-    # ==================== 6. 視覺化 ====================
-    print("\n【步驟 6】生成視覺化圖表...")
-    
-    visualizer = Visualizer()
-    
+
     # 選擇表現最好的股票進行詳細分析
     best_symbol = comparison_df.iloc[0]['股票代碼']
     best_name = comparison_df.iloc[0]['股票名稱']
+
+    # ==================== 6. 視覺化 ====================
+    print("\n【步驟 6】生成視覺化圖表...")
+    
+    """
+    visualizer = Visualizer()
     
     print(f"\n生成 {best_name} ({best_symbol}) 的詳細分析圖表...")
     
@@ -161,22 +173,28 @@ def main():
         save_name=f"{best_symbol.replace('.TW', '')}_report"
     )
     
+    # 顯示所有圖表
+    print("顯示所有圖表...")
+    visualizer.show()
+    """
+    print("  [!] 圖表輸出已暫停 (依使用者要求)")
+    
     # ==================== 7. 儲存結果 ====================
     print("\n【步驟 7】儲存結果...")
     
     # 儲存績效比較
     comparison_df.to_csv('results/performance_comparison.csv', index=False, encoding='utf-8-sig')
-    print("  ✓ 績效比較已儲存至 results/performance_comparison.csv")
+    print("  [v] 績效比較已儲存至 results/performance_comparison.csv")
     
     # 儲存各股票的交易記錄
     for symbol, results in all_results.items():
         if len(results['trades']) > 0:
             filename = f"results/{symbol.replace('.TW', '')}_trades.csv"
             results['trades'].to_csv(filename, index=False, encoding='utf-8-sig')
-            print(f"  ✓ {SEMICONDUCTOR_STOCKS[symbol]} 交易記錄已儲存至 {filename}")
+            print(f"  [v] {SEMI_AI_STOCKS[symbol]} 交易記錄已儲存至 {filename}")
     
     print("\n" + "=" * 80)
-    print("✅ 回測完成！")
+    print("[v] 回測完成！")
     print("=" * 80)
     print(f"\n最佳表現: {best_name} ({best_symbol})")
     print(f"總報酬率: {comparison_df.iloc[0]['總報酬率']:.2%}")

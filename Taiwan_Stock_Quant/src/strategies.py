@@ -268,8 +268,8 @@ class HybridStrategy(BaseStrategy):
             )
         else:
             # 不需要確認: 使用加權訊號
-            buy_signal = df['weighted_signal'] > 0.5
-            sell_signal = df['weighted_signal'] < -0.5
+            buy_signal = df['weighted_signal'] >= 0.5
+            sell_signal = df['weighted_signal'] <= -0.5
         
         df.loc[buy_signal, 'signal'] = 1
         df.loc[sell_signal, 'signal'] = -1

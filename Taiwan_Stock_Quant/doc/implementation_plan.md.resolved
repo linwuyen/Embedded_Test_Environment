@@ -1,0 +1,37 @@
+# 台積電策略優化計畫 (Strategy Improvement Plan)
+
+## 問題分析 (Problem Analysis)
+
+根據 [2330_trades.csv](file:///c:/Users/zerof/OneDrive/%E6%96%87%E4%BB%B6/GITHUB/Test-Environment/Taiwan_Stock_Quant/results/2330_trades.csv) 與 [config.py](file:///c:/Users/zerof/OneDrive/%E6%96%87%E4%BB%B6/GITHUB/Test-Environment/Taiwan_Stock_Quant/config.py) 的分析，台積電策略表現不佳 (-3.95%) 的主要原因如下：
+
+1.  **過早停利 (Cut Winners Short):**
+    *   目前的設定 `take_profit` 為 **15%**。這在台積電 2020-2021 與 2023-2024 的大牛市中（股價翻倍）限制了獲利空間。
+    *   例如：2022/10/26 買在 354，2022/11/11 賣在 415 (獲利 17%)。之後台積電一路漲到 500+ 甚至 800+，但策略已經出場。
+
+2.  **移動停損過太緊 (Tight Trailing Stop):**
+    *   `trailing_stop` 為 **5%**。對於波動較大的個股，很容易在盤整或小幅回檔時被洗出場，導致錯失後續的主升段。
+
+3.  **逆勢接刀 (Catching Falling Knives):**
+    *   2022 空頭年中，策略多次嘗試抄底（3月、5月、8月、9月、10月），結果多次觸發停損 (8%)，累積了虧損。
+
+## 建議修改方案 (Proposed Changes)
+
+我們需要讓策略「讓獲利奔跑」並減少「盤整洗盤」。
+
+### 1. 修改 [config.py](file:///c:/Users/zerof/OneDrive/%E6%96%87%E4%BB%B6/GITHUB/Test-Environment/Taiwan_Stock_Quant/config.py)
+
+#### [MODIFY] [config.py](file:///c:/Users/zerof/OneDrive/文件/GITHUB/Test-Environment/Taiwan_Stock_Quant/config.py)
+*   **移除或放寬固定停利點 (`take_profit`):** 建議從 15% 放寬到 50% 甚至移除（設為 None），改由趨勢指標或移動停損出場。
+*   **放寬移動停損 (`trailing_stop`):** 從 5% 調整為 10% - 15%，給予股價更多呼吸空間。
+*   **調整停損點 (`stop_loss`):** 保持 8-10% 防止單筆大賠，或稍微放寬至 10%。
+
+### 2. 優化策略邏輯 (Optional)
+*   如果調整參數後效果有限，可能需要檢查 [TrendFollowingStrategy](file:///c:/Users/zerof/OneDrive/%E6%96%87%E4%BB%B6/GITHUB/Test-Environment/Taiwan_Stock_Quant/src/strategies.py#60-134) 的進場邏輯，增加過濾條件（例如：均線呈現多頭排列才進場）以減少空頭市場的虧損訊號。
+
+## 驗證計畫 (Verification Plan)
+
+1.  **修改參數:** 修改 [config.py](file:///c:/Users/zerof/OneDrive/%E6%96%87%E4%BB%B6/GITHUB/Test-Environment/Taiwan_Stock_Quant/config.py) 中的 `RISK_MANAGEMENT` 設定。
+2.  **重新執行回測:** 執行 [main.py](file:///c:/Users/zerof/OneDrive/%E6%96%87%E4%BB%B6/GITHUB/Test-Environment/Taiwan_Stock_Quant/main.py)。
+3.  **檢查結果:**
+    *   確認台積電 (2330.TW) 的總報酬率是否轉正且大幅提升。
+    *   檢查新的交易紀錄 ([results/2330_trades.csv](file:///c:/Users/zerof/OneDrive/%E6%96%87%E4%BB%B6/GITHUB/Test-Environment/Taiwan_Stock_Quant/results/2330_trades.csv))，確認是否更能抱住波段。

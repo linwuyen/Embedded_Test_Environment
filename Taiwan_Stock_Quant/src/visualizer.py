@@ -16,11 +16,16 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import VISUALIZATION_CONFIG, DATA_PATHS
 
 # 設定中文字體
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'Microsoft JhengHei', 'SimHei']
-plt.rcParams['axes.unicode_minus'] = False
-
 # 設定樣式
 sns.set_style("whitegrid")
+
+# 設定中文字體 (需在 sns.set_style 之後設定，以免被覆蓋)
+import platform
+if platform.system() == 'Windows':
+    plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei', 'Microsoft JhengHei UI', 'PMingLiU', 'SimHei', 'Arial Unicode MS']
+else:
+    plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'Microsoft JhengHei', 'SimHei']
+plt.rcParams['axes.unicode_minus'] = False
 
 
 class Visualizer:
@@ -41,6 +46,10 @@ class Visualizer:
         self.fig_size = VISUALIZATION_CONFIG['figure_size']
         self.dpi = VISUALIZATION_CONFIG['dpi']
         self.save_format = VISUALIZATION_CONFIG['save_format']
+
+    def show(self):
+        """顯示所有圖表"""
+        plt.show()
     
     def plot_equity_curve(
         self,
@@ -81,8 +90,6 @@ class Visualizer:
         if save_name:
             plt.savefig(self.save_dir / f"{save_name}.{self.save_format}", 
                        dpi=self.dpi, bbox_inches='tight')
-        
-        plt.show()
     
     def plot_signals(
         self,
@@ -145,8 +152,6 @@ class Visualizer:
         if save_name:
             plt.savefig(self.save_dir / f"{save_name}.{self.save_format}", 
                        dpi=self.dpi, bbox_inches='tight')
-        
-        plt.show()
     
     def plot_indicators(
         self,
@@ -229,8 +234,6 @@ class Visualizer:
         if save_name:
             plt.savefig(self.save_dir / f"{save_name}.{self.save_format}", 
                        dpi=self.dpi, bbox_inches='tight')
-        
-        plt.show()
     
     def plot_drawdown(
         self,
@@ -283,8 +286,6 @@ class Visualizer:
         if save_name:
             plt.savefig(self.save_dir / f"{save_name}.{self.save_format}", 
                        dpi=self.dpi, bbox_inches='tight')
-        
-        plt.show()
     
     def generate_report(
         self,
@@ -354,7 +355,7 @@ class Visualizer:
         """
         
         ax3.text(0.1, 0.5, metrics_text, fontsize=11, 
-                verticalalignment='center', family='monospace')
+                verticalalignment='center')
         
         # 4. 回撤圖
         ax4 = fig.add_subplot(gs[2, :])
@@ -376,8 +377,6 @@ class Visualizer:
         # 儲存報告
         plt.savefig(self.save_dir / f"{save_name}.{self.save_format}", 
                    dpi=self.dpi, bbox_inches='tight')
-        
-        plt.show()
 
 
 def test_visualizer():
@@ -403,6 +402,8 @@ def test_visualizer():
     
     print("\n繪製資金曲線...")
     visualizer.plot_equity_curve(equity_curve, save_name="test_equity_curve")
+    
+    visualizer.show()
     
     print("\n✅ 測試完成！")
 

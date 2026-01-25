@@ -6,23 +6,50 @@ Configuration file for Taiwan Semiconductor Quantitative Trading System
 from datetime import datetime
 
 # ==================== 股票清單 ====================
-# 台股半導體主要股票 (股票代碼需加 .TW 後綴用於 yfinance)
-SEMICONDUCTOR_STOCKS = {
-    '2330.TW': '台積電',
-    '2454.TW': '聯發科',
-    '2303.TW': '聯電',
-    '2311.TW': '日月光投控',
-    '6415.TW': '矽力-KY',
-    '3034.TW': '聯詠',
-    '2408.TW': '南亞科',
-    '3711.TW': '日月光',
-    '2379.TW': '瑞昱',
-    '3443.TW': '創意',
+# 台股半導體與 AI 相關概念股 (股票代碼需加 .TW 後綴用於 yfinance)
+SEMI_AI_STOCKS = {
+    # 晶圓代工 & 封測
+    '2330.TW': '台積電',   # Wafer
+    '2303.TW': '聯電',     # Wafer
+    '3711.TW': '日月光投控', # Packaging
+    '2449.TW': '京元電子', # Testing
+    
+    # IP & ASIC (AI 關鍵)
+    '3443.TW': '創意',     # IP/ASIC
+    '3661.TW': '世芯-KY',  # IP/ASIC
+    '3035.TW': '智原',     # IP/ASIC
+    
+    # IC 設計
+    '2454.TW': '聯發科',   # Mobile/Edge AI
+    '2379.TW': '瑞昱',     # Comm/Edge
+    '3034.TW': '聯詠',     # Driver IC
+    '4966.TW': '譜瑞-KY',  # High speed interface
+    '5274.TW': '信驊',     # BMC (Server)
+    
+    # AI 伺服器 & 組裝
+    '2317.TW': '鴻海',     # Server/Assembly
+    '2382.TW': '廣達',     # AI Server
+    '3231.TW': '緯創',     # AI Server base
+    '2376.TW': '技嘉',     # AI Server
+    '2356.TW': '英業達',   # Server
+    '6669.TW': '緯穎',     # Cloud Server
+    '2357.TW': '華碩',     # AI PC/Server
+    '2377.TW': '微星',     # AI PC/Server
+
+    # 散熱 & 電源 & PCB
+    '2308.TW': '台達電',   # Power/Thermal
+    '3017.TW': '奇鋐',     # Thermal
+    '3324.TW': '雙鴻',     # Thermal
+    '3037.TW': '欣興',     # IC Substrate
+    '2368.TW': '金像電',   # PCB
 }
+
+# 舊清單 (保留參考)
+SEMICONDUCTOR_STOCKS = SEMI_AI_STOCKS
 
 # ==================== 回測參數 ====================
 BACKTEST_CONFIG = {
-    'initial_capital': 1_000_000,  # 初始資金 (新台幣)
+    'initial_capital': 10_000_000,  # 初始資金 (新台幣)
     'start_date': '2020-01-01',    # 回測起始日期
     'end_date': '2024-12-31',      # 回測結束日期
     'position_size': 0.2,          # 單筆最大投入比例 (20%)
@@ -40,14 +67,14 @@ TRANSACTION_COSTS = {
 
 # 趨勢跟隨策略參數
 TREND_FOLLOWING_PARAMS = {
-    'short_ma_period': 20,      # 短期均線週期
-    'long_ma_period': 60,       # 長期均線週期
+    'short_ma_period': 5,       # 短期均線週期 (原 20)
+    'long_ma_period': 20,       # 長期均線週期 (原 60)
     'ma_type': 'EMA',           # 均線類型: 'SMA' or 'EMA'
     'macd_fast': 12,            # MACD 快線
     'macd_slow': 26,            # MACD 慢線
     'macd_signal': 9,           # MACD 訊號線
     'volume_ma_period': 20,     # 成交量均線週期
-    'volume_threshold': 1.2,    # 成交量放大倍數
+    'volume_threshold': 1.0,    # 成交量放大倍數 (原 1.2)
 }
 
 # 均值回歸策略參數
@@ -62,17 +89,17 @@ MEAN_REVERSION_PARAMS = {
 
 # 混合策略參數
 HYBRID_STRATEGY_PARAMS = {
-    'trend_weight': 0.6,        # 趨勢策略權重
-    'mean_reversion_weight': 0.4,  # 均值回歸策略權重
-    'confirmation_required': True,  # 是否需要多重確認
+    'trend_weight': 0.5,        # 趨勢策略權重 (原 0.6)
+    'mean_reversion_weight': 0.5,  # 均值回歸策略權重 (原 0.4)
+    'confirmation_required': False,  # 是否需要多重確認
     'min_holding_days': 3,      # 最小持有天數
 }
 
 # ==================== 風險管理 ====================
 RISK_MANAGEMENT = {
-    'stop_loss': 0.08,          # 停損點 (8%)
-    'take_profit': 0.15,        # 停利點 (15%)
-    'trailing_stop': 0.05,      # 移動停損 (5%)
+    'stop_loss': 0.10,          # 停損點 (10%) - 原 8%
+    'take_profit': 0.50,        # 停利點 (50%) - 原 15%
+    'trailing_stop': 0.15,      # 移動停損 (15%) - 原 5%
     'max_drawdown_limit': 0.20, # 最大回撤限制 (20%)
 }
 

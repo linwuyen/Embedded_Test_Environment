@@ -66,15 +66,15 @@ class TaiwanStockDataLoader:
         start_date = start_date or BACKTEST_CONFIG['start_date']
         end_date = end_date or BACKTEST_CONFIG['end_date']
         
-        print(f"📊 開始下載台股資料: {start_date} 至 {end_date}")
-        print(f"📈 股票數量: {len(self.stock_dict)}")
+        print(f"=== 開始下載台股資料: {start_date} 至 {end_date}")
+        print(f"股票數量: {len(self.stock_dict)}")
         
         for symbol, name in tqdm(self.stock_dict.items(), desc="下載進度"):
             cache_file = self.raw_data_path / f"{symbol.replace('.TW', '')}_{start_date}_{end_date}.pkl"
             
             # 檢查快取
             if not force_download and cache_file.exists():
-                print(f"  ✓ {name} ({symbol}): 使用快取資料")
+                print(f"  [v] {name} ({symbol}): 使用快取資料")
                 with open(cache_file, 'rb') as f:
                     self.data[symbol] = pickle.load(f)
                 continue
@@ -85,7 +85,7 @@ class TaiwanStockDataLoader:
                 df = stock.history(start=start_date, end=end_date)
                 
                 if df.empty:
-                    print(f"  ✗ {name} ({symbol}): 無資料")
+                    print(f"  [x] {name} ({symbol}): 無資料")
                     continue
                 
                 # 重新命名欄位為中文（可選）
@@ -100,9 +100,9 @@ class TaiwanStockDataLoader:
                 print(f"  ✓ {name} ({symbol}): 下載 {len(df)} 筆資料")
                 
             except Exception as e:
-                print(f"  ✗ {name} ({symbol}): 下載失敗 - {str(e)}")
+                print(f"  [x] {name} ({symbol}): 下載失敗 - {str(e)}")
         
-        print(f"\n✅ 資料下載完成！成功下載 {len(self.data)} 檔股票")
+        print(f"\n[v] 資料下載完成！成功下載 {len(self.data)} 檔股票")
         return self.data
     
     def preprocess_data(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -178,7 +178,7 @@ class TaiwanStockDataLoader:
         
         # 預處理每檔股票
         processed_data = {}
-        print("\n🔧 開始資料預處理...")
+        print("\n=== 開始資料預處理...")
         
         for symbol, df in tqdm(self.data.items(), desc="處理進度"):
             try:
@@ -191,9 +191,9 @@ class TaiwanStockDataLoader:
                     pickle.dump(processed_df, f)
                     
             except Exception as e:
-                print(f"  ✗ {symbol}: 處理失敗 - {str(e)}")
+                print(f"  [x] {symbol}: 處理失敗 - {str(e)}")
         
-        print(f"✅ 資料預處理完成！成功處理 {len(processed_data)} 檔股票\n")
+        print(f"[v] 資料預處理完成！成功處理 {len(processed_data)} 檔股票\n")
         return processed_data
     
     def load_processed_data(self, symbol: str) -> Optional[pd.DataFrame]:
@@ -300,7 +300,7 @@ def test_data_download():
         print(f"\n{first_symbol} 前 5 筆資料:")
         print(data[first_symbol].head())
     
-    print("\n✅ 測試完成！")
+    print("\n[v] 測試完成！")
 
 
 if __name__ == "__main__":
