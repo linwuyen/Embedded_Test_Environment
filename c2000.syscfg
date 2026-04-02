@@ -1,0 +1,40 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --board "/boards/TMDSCNCD28388D" --device "F2838x" --part "F2838x_337bga" --package "337bga" --context "CPU1" --product "C2000WARE@5.04.00.00"
+ * @v2CliArgs --device "TMS320F28388D" --package "337bga" --board "/boards/TMDSCNCD28388D" --context "CPU1" --product "C2000WARE@5.04.00.00"
+ * @versions {"tool":"1.21.0+3721"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const mcbsp  = scripting.addModule("/driverlib/mcbsp.js", {}, false);
+const mcbsp1 = mcbsp.addInstance();
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+const divider11       = system.clockTree["LOSPCP"];
+divider11.divideValue = 1;
+
+const multiplier2         = system.clockTree["PLL_IMULT"];
+multiplier2.multiplyValue = 40;
+
+const pinFunction2     = system.clockTree["X1"];
+pinFunction2.XTAL_Freq = 20;
+
+mcbsp1.$name         = "myMCBSP0";
+mcbsp1.mcbsp.$assign = "MCBSPA";
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+mcbsp1.mcbsp.mdxPin.$suggestSolution   = "hsecDigital.151";
+mcbsp1.mcbsp.mdrPin.$suggestSolution   = "hsecDigital.152";
+mcbsp1.mcbsp.mclkxPin.$suggestSolution = "hsecDigital.153";
+mcbsp1.mcbsp.mclkrPin.$suggestSolution = "hsecDigital.108";
+mcbsp1.mcbsp.mfsxPin.$suggestSolution  = "hsecDigital.154";
+mcbsp1.mcbsp.mfsrPin.$suggestSolution  = "hsecDigital.110";
