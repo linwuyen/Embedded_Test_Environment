@@ -1,0 +1,232 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --device "F28004x" --package "F28004x_100PZ" --part "F28004x_100PZ" --context "system" --product "C2000WARE@5.01.00.00"
+ * @versions {"tool":"1.19.0+3426"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const adc              = scripting.addModule("/driverlib/adc.js", {}, false);
+const adc1             = adc.addInstance();
+const adc2             = adc.addInstance();
+const adc3             = adc.addInstance();
+const aio              = scripting.addModule("/driverlib/aio.js", {}, false);
+const aio1             = aio.addInstance();
+const aio2             = aio.addInstance();
+const aio3             = aio.addInstance();
+const aio4             = aio.addInstance();
+const aio5             = aio.addInstance();
+const aio6             = aio.addInstance();
+const asysctl          = scripting.addModule("/driverlib/asysctl.js");
+const cmpss            = scripting.addModule("/driverlib/cmpss.js", {}, false);
+const cmpss1           = cmpss.addInstance();
+const cputimer         = scripting.addModule("/driverlib/cputimer.js", {}, false);
+const cputimer1        = cputimer.addInstance();
+const dac              = scripting.addModule("/driverlib/dac.js", {}, false);
+const dac1             = dac.addInstance();
+const dac2             = dac.addInstance();
+const epwm             = scripting.addModule("/driverlib/epwm.js", {}, false);
+const epwm1            = epwm.addInstance();
+const epwm2            = epwm.addInstance();
+const epwm3            = epwm.addInstance();
+const epwm4            = epwm.addInstance();
+const flash            = scripting.addModule("/driverlib/flash.js", {}, false);
+const flash1           = flash.addInstance();
+const gpio             = scripting.addModule("/driverlib/gpio.js", {}, false);
+const gpio1            = gpio.addInstance();
+const gpio2            = gpio.addInstance();
+const gpio3            = gpio.addInstance();
+const gpio4            = gpio.addInstance();
+const gpio5            = gpio.addInstance();
+const gpio6            = gpio.addInstance();
+const gpio7            = gpio.addInstance();
+const gpio8            = gpio.addInstance();
+const gpio9            = gpio.addInstance();
+const gpio10           = gpio.addInstance();
+const inputxbar_input  = scripting.addModule("/driverlib/inputxbar_input.js", {}, false);
+const inputxbar_input1 = inputxbar_input.addInstance();
+const spi              = scripting.addModule("/driverlib/spi.js", {}, false);
+const spi1             = spi.addInstance();
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+adc1.adcClockPrescaler              = "ADC_CLK_DIV_2_0";
+adc1.$name                          = "CV_AD";
+adc1.soc0SampleWindow               = 8;
+adc1.soc0Channel                    = "ADC_CH_ADCIN10";
+adc1.interruptPulseMode             = "ADC_PULSE_END_OF_CONV";
+adc1.enableInterrupt1               = true;
+adc1.soc0Trigger                    = "ADC_TRIGGER_EPWM4_SOCA";
+adc1.enableInterrupt2               = true;
+adc1.enableInterrupt2ContinuousMode = true;
+adc1.registerInterrupts             = ["1"];
+adc1.soc1Channel                    = "ADC_CH_ADCIN10";
+adc1.soc1Trigger                    = "ADC_TRIGGER_EPWM4_SOCA";
+adc1.enabledInts                    = ["ADC_INT_NUMBER1"];
+adc1.soc1SampleWindow               = 500;
+adc1.soc1UseSampleTimeCalculator    = true;
+adc1.soc1UseCalculatedSampleTime    = true;
+adc1.soc1InputResistance            = 150;
+adc1.soc1InputCapacitance           = 1000;
+adc1.enabledSOCs                    = ["ADC_SOC_NUMBER0"];
+adc1.soc0UseSampleTimeCalculator    = true;
+adc1.soc0InputCapacitance           = 1000;
+adc1.soc0InputResistance            = 150;
+adc1.soc0UseCalculatedSampleTime    = true;
+adc1.adcInt1.enableInterrupt        = true;
+
+adc2.adcClockPrescaler           = "ADC_CLK_DIV_2_0";
+adc2.soc1SampleWindow            = 8;
+adc2.soc1Channel                 = "ADC_CH_ADCIN2";
+adc2.soc1Trigger                 = "ADC_TRIGGER_EPWM2_SOCA";
+adc2.interruptPulseMode          = "ADC_PULSE_END_OF_CONV";
+adc2.$name                       = "MCP3301_TEMP";
+adc2.useInterrupts               = false;
+adc2.enabledSOCs                 = ["ADC_SOC_NUMBER0"];
+adc2.soc0Channel                 = "ADC_CH_ADCIN2";
+adc2.enableInterrupt1            = true;
+adc2.adcBase                     = "ADCC_BASE";
+adc2.soc0Trigger                 = "ADC_TRIGGER_EPWM4_SOCA";
+adc2.soc0SampleWindow            = 200;
+adc2.soc0UseSampleTimeCalculator = true;
+adc2.soc0InputResistance         = 75;
+adc2.soc0UseCalculatedSampleTime = true;
+adc2.soc0InputCapacitance        = 1000;
+
+adc3.adcBase                 = "ADCB_BASE";
+adc3.$name                   = "DDS";
+adc3.registerInterrupts      = ["1"];
+adc3.adcInt1.enableInterrupt = true;
+
+aio1.$name                  = "FANFAIL1";
+aio1.aioPin.$assign         = "AIO227";
+aio1.aioPin["AIO#"].$assign = "B4/C8/PGA4_OF";
+
+aio2.$name                  = "DCOVP";
+aio2.aioPin.$assign         = "AIO237";
+aio2.aioPin["AIO#"].$assign = "C0";
+
+aio3.$name          = "PFC_UVP";
+aio3.aioPin.$assign = "AIO239";
+
+aio4.$name                  = "PFC_UVP2";
+aio4.aioPin.$assign         = "AIO245";
+aio4.aioPin["AIO#"].$assign = "C3, PGA4_IN";
+
+aio5.$name                  = "ILA_AD";
+aio5.aioPin.$assign         = "AIO224";
+aio5.aioPin["AIO#"].$assign = "A2/B6/PGA1_OF";
+
+aio6.$name                  = "ILB_AD";
+aio6.aioPin.$assign         = "AIO225";
+aio6.aioPin["AIO#"].$assign = "A4/B8/PGA2_OF";
+
+asysctl.analogReference        = "INTERNAL";
+asysctl.analogReferenceVoltage = "1P65";
+
+cmpss1.enableModule = true;
+cmpss1.$name        = "DAC7612";
+
+cputimer1.$name          = "SWTIRMER";
+cputimer1.startTimer     = true;
+cputimer1.emulationMode  = "CPUTIMER_EMULATIONMODE_RUNFREE";
+cputimer1.timerPrescaler = 2;
+cputimer1.timerPeriod    = 33333333;
+
+dac1.enableOutput     = true;
+dac1.referenceVoltage = "DAC_REF_ADC_VREFHI";
+dac1.$name            = "CC_DA";
+dac1.gainMode         = "DAC_GAIN_TWO";
+
+dac2.$name          = "myDACB";
+dac2.enableOutput   = true;
+dac2.dacBase        = "DACB_BASE";
+dac2.ePWMSyncSignal = "5";
+
+epwm1.$name                                             = "CLK180_5";
+epwm1.useCase                                           = "CUSTOM";
+epwm1.useInterfacePins                                  = ["EPWM#_A"];
+epwm1.epwmEventTrigger_EPWM_SOC_A_triggerEnable         = true;
+epwm1.epwmEventTrigger_EPWM_SOC_A_triggerSource         = "EPWM_SOC_TBCTR_PERIOD";
+epwm1.epwmEventTrigger_EPWM_SOC_A_triggerEventPrescalar = "1";
+epwm1.epwm.$assign                                      = "EPWM2";
+epwm1.epwm.epwm_aPin.$assign                            = "GPIO2";
+
+epwm2.$name                  = "CLK0_5";
+epwm2.useCase                = "CUSTOM";
+epwm2.useInterfacePins       = ["EPWM#_A"];
+epwm2.epwm.$assign           = "EPWM1";
+epwm2.epwm.epwm_aPin.$assign = "GPIO0";
+
+epwm3.$name                  = "FANCTRL5";
+epwm3.useCase                = "CUSTOM";
+epwm3.useInterfacePins       = ["EPWM#_A"];
+epwm3.epwm.$assign           = "EPWM3";
+epwm3.epwm.epwm_aPin.$assign = "GPIO4";
+
+epwm4.useCase                = "CUSTOM";
+epwm4.useInterfacePins       = ["EPWM#_A"];
+epwm4.$name                  = "DDS_PWM";
+epwm4.epwm.epwm_aPin.$assign = "GPIO8";
+
+flash1.$name = "FMC_CPU1";
+
+gpio1.direction         = "GPIO_DIR_MODE_OUT";
+gpio1.$name             = "OFF_PWMn";
+gpio1.writeInitialValue = true;
+gpio1.initialValue      = 1;
+gpio1.gpioPin.$assign   = "GPIO32";
+
+gpio2.direction       = "GPIO_DIR_MODE_OUT";
+gpio2.$name           = "EN_MASTER";
+gpio2.gpioPin.$assign = "GPIO17";
+
+gpio3.$name           = "PFC_OTP";
+gpio3.gpioPin.$assign = "GPIO1";
+
+gpio4.$name           = "ACFAIL5";
+gpio4.gpioPin.$assign = "GPIO7";
+
+gpio5.$name           = "PFC_OVP";
+gpio5.gpioPin.$assign = "GPIO10";
+
+gpio6.$name           = "FANFAIL3";
+gpio6.gpioPin.$assign = "GPIO12";
+
+gpio7.$name           = "FANFAIL2";
+gpio7.gpioPin.$assign = "GPIO13";
+
+gpio8.$name           = "FANFAIL4";
+gpio8.gpioPin.$assign = "GPIO33";
+
+gpio9.$name           = "PFC_OVP2";
+gpio9.gpioPin.$assign = "GPIO22_VFBSW";
+
+gpio10.$name             = "myGPIO0";
+gpio10.direction         = "GPIO_DIR_MODE_OUT";
+gpio10.writeInitialValue = true;
+gpio10.gpioPin.$assign   = "GPIO30";
+
+inputxbar_input1.$name         = "myINPUTXBARINPUT0";
+inputxbar_input1.inputxbarGpio = "GPIO7";
+inputxbar_input1.inputxbarLock = true;
+
+spi1.bitRate                 = 1000000;
+spi1.useInterrupts           = false;
+spi1.$name                   = "mySPIs";
+spi1.spi.$assign             = "SPIB";
+spi1.spi.spi_picoPin.$assign = "GPIO24";
+spi1.spi.spi_pociPin.$assign = "GPIO6";
+spi1.spi.spi_clkPin.$assign  = "GPIO28";
+spi1.spi.spi_ptePin.$assign  = "GPIO29";
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+aio3.aioPin["AIO#"].$suggestSolution = "C4";
+epwm4.epwm.$suggestSolution          = "EPWM5";
