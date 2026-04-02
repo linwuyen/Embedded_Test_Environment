@@ -58,7 +58,7 @@ void main(void)
 
     GPIO_setPinConfig(GPIO_73_XCLKOUT);
     SysCtl_selectClockOutSource(SYSCTL_CLOCKOUT_SYSCLK);
-    SysCtl_setXClk(SYSCTL_XCLKOUT_DIV_8);
+    SysCtl_setXClk(SYSCTL_LSPCLK_PRESCALE_1);
 
     //
     // C2000Ware Library initialization
