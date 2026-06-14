@@ -1,43 +1,27 @@
 # Embedded_Test_Environment
 
-Public repository for reusable embedded firmware test environment, validation support, and test workflow documentation.
+Embedded firmware 測試環境與驗證流程 repository。
 
-This repository is for test tooling and reproducible validation support. It is not a production firmware mainline.
+此 repo 用於整理可重複執行的測試流程、測試輸入、測試輸出格式與驗證紀錄。它不是正式韌體主線。
 
-## Repository Role
+## 1. Repository 角色
 
-- **Purpose:** reusable embedded firmware test environment and validation support.
-- **Status:** test and tooling repository.
-- **Visibility:** public.
-- **Scope:** test harnesses, fixtures, scripts, reproducible test cases, and supporting documentation.
-- **Production status:** not a production firmware mainline.
+- **用途：** embedded firmware test environment。
+- **狀態：** test / tooling repository。
+- **可見性：** public。
+- **範圍：** 測試案例、測試流程、報告格式、工具設定說明。
+- **正式產品狀態：** 不是 production firmware。
 
-## Intended Contents
+## 2. 適合放的內容
 
-Use this repository for:
-
-- test harnesses
-- validation scripts
-- fixture descriptions
-- input/output examples
-- reproducible test cases
-- report templates
+- 測試案例說明
+- 驗證流程
+- input / output 範例
+- report template
 - tool setup notes
+- target board 測試條件
 
-## What Should Not Go Here
-
-Do not use this repository for:
-
-- production firmware source of truth
-- confidential product code
-- private customer data
-- generated build outputs
-- credentials or device secrets
-- unrelated bulk storage
-
-## Test Case Documentation Template
-
-Each test should record:
+## 3. Test case template
 
 ```text
 Test name:
@@ -50,10 +34,9 @@ Pass criteria:
 Known limitations:
 ```
 
-## Working Rules
+## 4. Working rules
 
-1. Document prerequisites and expected outputs for every test workflow.
-2. Keep target-specific assumptions explicit.
-3. Separate generated results from version-controlled test definitions.
-4. Keep tests small enough to reproduce.
-5. Do not commit credentials, private device data, or generated build output.
+1. 每個 test workflow 都要能重現。
+2. 測試前提、輸入、輸出與 pass criteria 要寫清楚。
+3. 測試結果與測試定義要分開管理。
+4. 大型輸出結果不要直接堆進 repo。
